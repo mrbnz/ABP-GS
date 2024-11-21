@@ -1,0 +1,37 @@
+<header class="mb-4">
+	<h1 class="text-center">{{ nomEditorial }}</h1>
+</header>
+<section>
+	<article class="mb-4">
+		<table class="table table-bordered">
+			<tr><td><strong>ID:</strong></td><td>{{ idEditorial }}</td></tr>
+			<tr><td><strong>Nom:</strong></td><td>{{ nomEditorial }}</td></tr>
+			<tr><td><strong>Provincia:</strong></td><td>{{ provincia }}</td></tr>
+			<tr><td><strong>Municipi:</strong></td><td>{{ municipi }}</td></tr>
+			<tr><td><strong>Web:</strong></td><td>{{ web }}</td></tr>
+			<tr><td><strong>Email:</strong></td><td>{{ email }}</td></tr>
+			<tr><td><strong>Telèfon:</strong></td><td>{{ telefon }}</td></tr>
+		</table>
+	</article>
+	<article>
+		<form name="f1" method="POST">
+			<table class="table table-bordered">
+				<tr><td><strong>ID:</strong></td><td><input type="text" class="form-control" name="idEditorial" value="{{ idEditorial }}" readonly></td></tr>
+				<tr><td><strong>Nom:</strong></td><td><input type="text" class="form-control" name="nomEditorial" value="{{ nomEditorial }}"></td></tr>
+				<tr><td><strong>Provincia:</strong></td><td><input type="text" class="form-control" name="provincia" value="{{ provincia }}"></td></tr>
+				<tr><td><strong>Municipi:</strong></td><td><input type="text" class="form-control" name="municipi" value="{{ municipi }}"></td></tr>
+				<tr><td><strong>Web:</strong></td><td><input type="text" class="form-control" name="web" value="{{ web }}"></td></tr>
+				<tr><td><strong>Email:</strong></td><td><input type="text" class="form-control" name="email" value="{{ email }}"></td></tr>
+				<tr><td><strong>Telèfon:</strong></td><td><input type="text" class="form-control" name="telefon" value="{{ telefon }}"></td></tr>
+				<tr>
+					<th colspan="2" class="text-center">
+						<button type="submit" class="btn btn-primary" name="submit">Desa</button>
+						<button type="reset" class="btn btn-secondary" name="reset">Restableix</button>
+						<button type="submit" class="btn btn-warning" name="cancela">Cancel·la</button>
+						<button type="submit" class="btn btn-danger" name="elimina">Elimina</button>
+					</th>
+				</tr>
+			</table>
+		</form>
+	</article>
+</section>

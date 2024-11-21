@@ -1,0 +1,42 @@
+#######################################################################
+#####                    MVC per Montilivi DAW                    #####
+#######################################################################
+Què cal fer:
+	* Descomprimeix aquest conjunt de fitxers en un lloc accessible del teu servidor web.
+
+	* Crea la Base de dades amb la informació inicial (si vols pot ometre la part del INSERT. Executant l'script creaBase.sql. a la BdD mySQL.
+
+	* Modificarem els fitxers necessaris per tal que tot funcioni correctament.
+		* .htaccess
+			Cal que la linia "RewriteBase /Montilivi" apunti al directori específic dins el teu domini. Si és l'arrel deixa /.
+		* config/baseDeDades.php
+			Cal assegurar-se que els paràmetres d'accés a la Base de Dades són correctes a la línia
+				BdD::connect("127.0.0.1", "usuari", "password", "basededades");
+		* config/funcionsinicials.php
+			Configurar el model
+				define('WEBBASE', "http://localhost/Montilivi/"); 				-> Ruta pels links 
+				define('DIRBASE', "C:/MVC/Montilivi");						-> Ruta de l'aplicació al disc
+				define('WEBROOT', str_replace("index.php", "", $_SERVER["SCRIPT_NAME"]));	-> Ruta de l'arrel del web
+				define('ESTILS', "styles/style.css");						-> Fitxer d'estils
+				define('PGDEFAULT', "");							-> Per defecte
+				define('ERRDEFAULT', "./error.html");						-> pàgina d'errada
+				define('TITOL', "Benvinguts !!!!");						-> Títol del web
+				define('DESCRIPCIO', "... a casa meva ...");					-> Descripció del web
+
+	* Estructura de Directoris
+		bundle -> aquí dins crearem un directori per cada "Classe" i dins podran haver-hi les carpetes:
+			* controllers (ClasseController)
+			* models (Classe i ClasseManager)
+			* templates (plantilles twig)
+			* views (plantilles php)
+		cache -> l'utilitza twig per guardar les plantilles preformatades (es recomanda buidar-la de tant en tant. Ara tenim el twig configurat perquè no s'utilitzi)
+		config-> Fitxers de configuració baseDeDades.php i funcionsInicials.php (cal adaptar alguns paràmetres)
+		images-> html per guardar imatges, etc...
+		tools -> eines per utilitzar, ara mateix script sql per la creació de la base i les taules inicials...
+		vendors-> per moduls externs + eines internes
+			me -> eines internes BdD.php, Controller.php, RouterController.php, layout.php
+				(així la carpeta bundle és només de l'usuari, igual que les altres) (si cal només treuria layout.php)
+			Twig -> twig
+		.htaccess, index.php, LLEGEIXME.txt
+	
+	

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+	<base href="{{ WEBBASE }}" />
+	<meta charset="UTF-8" />
+	<title>{{ TITOL }}</title>
+	<meta name="description" content="{{ DESCRIPCIO }}" />
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <meta http-equiv="cache-control" content="no-cache">	
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+			display: flex;
+			flex-direction: column;
+		}
+		main {
+			flex: 1;
+		}
+	</style>
+</head>
+<body>
+<header class="bg-light py-3">
+	<div class="container">
+		{% if prova is defined %}
+			<h2 class="text-right">
+				<span class="badge badge-secondary">
+					{{ prova }}
+				</span>
+			</h2>
+		{% else %}
+			<h1 class="text-center">{{ TITOL | raw }}</h1>
+			<h2 class="text-center">{{ DESCRIPCIO | raw }}</h2>
+		{% endif %}
+	</div>
+</header>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	<div class="container">
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item"><a class="nav-link" href="./">Inici</a></li>
+			<li class="nav-item"><a class="nav-link" href="./Editorial">Editorial</a></li>
+			<li class="nav-item"><a class="nav-link" href="./Llibre">Llibres</a></li>
+		</ul>
+	</div>
+</nav>
+
+<main class="container my-4">
+	<article>
+		{{ HTMLCOS | raw }}
+	</article>
+</main>
+
+<footer class="bg-dark text-white text-center py-4">
+	<div class="container">
+		<div class="row">
+			<div class="col-12">
+				<p class="mb-1"><strong>Ajuntament de Girona - Exemple de MVC</strong></p>
+			</div>
+			<div class="col-md-4">
+				<p class="mb-1">Adreça: Plaça del Vi, 1, 17004 Girona</p>
+			</div>
+			<div class="col-md-4">
+				<p class="mb-1">Telèfon: <a href="tel:+34972419010" class="text-white">972 419 010</a></p>
+			</div>
+			<div class="col-md-4">
+				<p class="mb-0">Correu electrònic: <a href="mailto:info@ajgirona.cat" class="text-white">info@ajgirona.cat</a></p>
+			</div>
+		</div>
+	</div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
