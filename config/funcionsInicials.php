@@ -10,6 +10,9 @@ define('ERRDEFAULT', "./error.html");
 define('TITOL', "");
 define('DESCRIPCIO', "");
 
+
+
+
 /**
 	Funci� que treu WEBROOT de la URL
 **/
