@@ -6,20 +6,97 @@
 	<base href="http://localhost/MVC/" />
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="./styles/style.css" />
+	<style>
+		.carousel {
+			max-width: 100%; /* Ajustar el tamaño del carrousel */
+			margin: auto; /* Centrar el carrousel */
+		}
+		.carousel-item img {
+			height: 750px; /* Ajustar la altura de las imágenes */
+			object-fit: cover; /* Mantener la proporción de la imagen */
+			width: 100%; /* Asegurar que la imagen ocupe todo el ancho */
+		}
+	</style>
 </head>
 
 <body>
-<header class="bg-light py-3">
-	<div class="container text-center">
-		<h1>Ajuntament de Girona</h1>
-		<h2>{{ TITOL }}</h2>
+<!-- Inici del carrousel -->
+<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+	<ol class="carousel-indicators">
+		<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+		<li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+		<li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+		<li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+	</ol>
+	<div class="carousel-inner">
+		<div class="carousel-item active">
+			<img src="../images/imgGironaCarr.jpeg" class="d-block w-100" alt="...">
+		</div>
+		<div class="carousel-item">
+			<img src="../images/img2.jpeg" class="d-block w-100" alt="...">
+		</div>
+		<div class="carousel-item">
+			<img src="../images/img3.jpeg" class="d-block w-100" alt="...">
+		</div>
+		<div class="carousel-item">
+			<img src="../images/img4.jpeg" class="d-block w-100" alt="...">
+		</div>
 	</div>
-</header>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-	<div class="container">
-		<!-- Aquí es pot afegir un logotip o imatge -->
+	<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+		<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+		<span class="sr-only">Anterior</span>
+	</a>
+	<a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+		<span class="carousel-control-next-icon" aria-hidden="true"></span>
+		<span class="sr-only">Següent</span>
+	</a>
+</div>
+<!-- Fi del carrousel -->
+
+<!-- Títol del lloc -->
+<div class="text-center my-4">
+	<h2>Agenda de l'Ajuntament de Girona</h2>
+	<p>Descobreix les activitats i esdeveniments que tenim preparats per a tu!</p>
+</div>
+
+<!-- Llistat d'activitats -->
+<div class="container my-4">
+	<div class="row">
+		<div class="col-md-3">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">Activitat 1</h5>
+					<p class="card-text">Descripció de l'activitat 1.</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">Activitat 2</h5>
+					<p class="card-text">Descripció de l'activitat 2.</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">Activitat 3</h5>
+					<p class="card-text">Descripció de l'activitat 3.</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">Activitat 4</h5>
+					<p class="card-text">Descripció de l'activitat 4.</p>
+				</div>
+			</div>
+		</div>
 	</div>
-</nav>
+</div>
+<!-- Fi del llistat d'activitats -->
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>

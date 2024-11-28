@@ -11,51 +11,79 @@
 		html, body {
 			height: 100%;
 			margin: 0;
+			font-family: 'Roboto', sans-serif;
+			background-color: #f8f9fa;
+		}
+		body {
 			display: flex;
 			flex-direction: column;
+			min-height: 100vh;
 		}
 		main {
 			flex: 1;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			padding: 10px; /* Reduced padding */
+		}
+		.navbar {
+			box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1); /* Reduced shadow */
+		}
+		footer {
+			background-color: #343a40;
 		}
 	</style>
 </head>
 <body>
-<header class="bg-light py-3">
-	<div class="container">
+{# <header class="bg-white py-2 border-bottom"> <!-- Reduced padding -->
+	<div class="container-fluid">
 		{% if prova is defined %}
-			<h2 class="text-right">
-				<span class="badge badge-secondary">
+			<h3 class="text-end"> <!-- Reduced heading size -->
+				<span class="badge bg-secondary">
 					{{ prova }}
 				</span>
-			</h2>
+			</h3>
 		{% else %}
-			<h1 class="text-center">{{ TITOL | raw }}</h1>
-			<h2 class="text-center">{{ DESCRIPCIO | raw }}</h2>
+			<h2 class="text-center">{{ TITOL | raw }}</h2> <!-- Reduced heading size -->
+			<h3 class="text-center">{{ DESCRIPCIO | raw }}</h3> <!-- Reduced heading size -->
 		{% endif %}
 	</div>
-</header>
+</header> #}
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-	<div class="container">
-		<ul class="navbar-nav mr-auto">
-			<li class="nav-item"><a class="nav-link" href="./">Inici</a></li>
-			<li class="nav-item"><a class="nav-link" href="./Editorial">Editorial</a></li>
-			<li class="nav-item"><a class="nav-link" href="./Llibre">Llibres</a></li>
-		</ul>
-	</div>
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #343a40;">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="./">
+            <img src="./images/LogoDefinitiuGA.png" alt="Logo" class="d-inline-block" style="max-width: 50px;">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="./">Inici</a></li>
+                <li class="nav-item"><a class="nav-link" href="./login">Login</a></li>
+                <li class="nav-item"><a class="nav-link" href="./signup">Sign-up</a></li>
+            </ul>
+           <!-- <div class="d-flex">
+                <a href="./login" class="btn btn-outline-light me-2">Login</a>
+                <a href="./signup" class="btn btn-light">Sign-up</a>
+            </div>-->
+        </div>
+    </div>
 </nav>
 
-<main class="container my-4">
+
+<main class="container-fluid my-2">
 	<article>
 		{{ HTMLCOS | raw }}
 	</article>
 </main>
 
-<footer class="bg-dark text-white text-center py-4">
-	<div class="container">
+<footer class="text-white text-center py-3">
+	<div class="container-fluid">
 		<div class="row">
 			<div class="col-12">
-				<p class="mb-1"><strong>Ajuntament de Girona - Exemple de MVC</strong></p>
+				<p class="mb-1"><strong>Ajuntament de Girona - GiroAgenda MVC</strong></p>
 			</div>
 			<div class="col-md-4">
 				<p class="mb-1">Adreça: Plaça del Vi, 1, 17004 Girona</p>
@@ -70,8 +98,8 @@
 	</div>
 </footer>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
