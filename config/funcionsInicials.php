@@ -1,7 +1,7 @@
 <?php
 
 //valors per defecte
-define('WEBBASE', "http://localhost:80/MVC/");
+define('WEBBASE', "http://localhost/MVC/");
 define('DIRBASE', "/var/www/html/exercicism07/MVC"); 
 define('WEBROOT', str_replace("index.php", "", $_SERVER["SCRIPT_NAME"]));
 define('ESTILS', "styles/style.css");

@@ -1,4 +1,4 @@
-	<?php
+<?php
 
 /*
  *       _____ _____ _____                _       _
@@ -45,6 +45,11 @@ abstract class Controller
 	* @var  per a la vista
 	**/
 	protected $twig = false;
+	/**
+	* @var  per logat
+	**/
+	protected $logat = false;
+	protected $logat_user = "";
 
     /**
      * Protects any variable by converting HTML special characters to entities
@@ -69,23 +74,69 @@ abstract class Controller
             return $x;
     }
 
+	/**
+	 * Constructor
+	**/
+	public function __construct()
+	{
+		if (isset($_SESSION["logat"]))
+			$this->logat = $_SESSION["logat"];
+		if (isset($_SESSION["logat_user"]))
+			$this->logat_user = $_SESSION["logat_user"];
+	}
+	
+	/**
+	 * Destructor
+	**/
+	public function __destruct()
+	{
+		$_SESSION["logat"] = $this->logat;
+		$_SESSION["logat_user"] = $this->logat_user;
+	}
+
+	/**
+	 * Logat
+	**/
+	protected function EstaLogat()
+	{				
+		return $this->logat;
+	}
+
+	/**
+	 * Login
+	**/
+	protected function login($user)
+	{	
+		$this->logat = true;			
+		$this->logat_user = $user;	
+				
+	}
+
+	/**
+	 * Logout
+	**/
+	protected function logout()
+	{
+		$this->logat = false;	
+		$this->logat_user = "";	
+		$this->redirect("");
+	}
+
+
     /**
      * Renders the view
      */
     public function renderView($error = null)
    {
+	
 		// cas de pàgina d'Errada
 		if ($error == "ERROR") {
 			$this->twig = "error.html";
-			//$loader = new Twig_Loader_Filesystem("./bundle");
-			//$twig = new Twig_Environment($loader, array(
 			$loader2 = new \Twig\Loader\FilesystemLoader("./bundle");
 			$twig = new \Twig\Environment($loader2, array(	
-			//'cache' => './cache',
 			'cache' => false,
 			'autoreload' => true,
 			));
-			//$twig->getExtension('core')->setTimezone('Europe/Andorra');
 			$template = $twig->load($this->twig);
 			$HTMLCOS = $template->render($this->data);
 			
@@ -93,24 +144,19 @@ abstract class Controller
 			$this->twig = "index.html";
 			$loader2 = new \Twig\Loader\FilesystemLoader("./bundle");
 			$twig = new \Twig\Environment($loader2, array(			
-			//'cache' => './cache',
 			'cache' => false,
 			'autoreload' => true,
-			));
-			//$twig->getExtension('core')->setTimezone('Europe/Andorra');
+			));				
+			$this->data["LOGAT"] = $this->logat;
 			$template = $twig->load($this->twig);
 			$HTMLCOS = $template->render($this->data);
 		} else {
 			$this->twig = "layout.html";
-			//$loader = new Twig_Loader_Filesystem("./bundle/" . str_replace("Controller", "", get_class($this->controller)) . "/templates");
-			//$twig = new Twig_Environment($loader, array(
 			$loader2 = new \Twig\Loader\FilesystemLoader("./bundle/" . str_replace("Controller", "", get_class($this->controller)) . "/templates");
 			$twig = new \Twig\Environment($loader2, array(	
-			//'cache' => './cache',
 			'cache' => false,
 			'autoreload' => true,
-			));
-			//$twig->getExtension('core')->setTimezone('Europe/Andorra');
+			));		
 			$template = $twig->load($this->controller->twig);
 			$HTMLCOS = $template->render($this->controller->data);
 		}
@@ -127,19 +173,27 @@ abstract class Controller
 		// $DATA = $this->controller->data;
 		$DATA['ESTILS'] = ESTILS;
 		$DATA['TITOL'] = TITOL;
-		$DATA['DESCRIPCIO'] = DESCRIPCIO;
+		$DATA['DESCRIPCIO'] = DESCRIPCIO;	
 		$DATA['WEBBASE'] = WEBBASE;
+		$DATA['LOGAT'] = $this->logat;
+		$DATA['LOGIN_USER'] = $this->logat_user;
+
 		
 		//Miro si tinc dades en el head
 		if(isset($this->controller->head["title"])){
+			if ($this->controller->head["title"] != "")
 			 $DATA['TITOL'] = $this->controller->head["title"];
 		}
 		if(isset($this->controller->head["description"])){
+			if ($this->controller->head["description"] != "")
 			 $DATA['DESCRIPCIO'] = $this->controller->head["description"];
 		}
-
-		foreach($this->controller->data as $k => $v) $DATA[$k] = $v;
-		$DATA['HTMLCOS'] = $HTMLCOS;
+		if (isset($this->controller->data["missatge"]))
+			$DATA['MISSATGE'] = $this->controller->data["missatge"];
+		
+		if (isset($this->controller->data))
+			foreach($this->controller->data as $k => $v) $DATA[$k] = $v;
+				$DATA['HTMLCOS'] = $HTMLCOS;
 
 		$template = $twig2->load("layout.html");
 		$HTMLBASE = $template->render($DATA);

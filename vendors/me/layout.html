@@ -60,14 +60,14 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
-                <li class="nav-item"><a class="nav-link" href="./">Inici</a></li>
+                <li class="nav-item"><a class="nav-link" href="./">In ici</a></li>
+                {% if not session.username %}
                 <li class="nav-item"><a class="nav-link" href="./login">Login</a></li>
-                <li class="nav-item"><a class="nav-link" href="./signup">Sign-up</a></li>
+                <li class="nav-item"><a class="nav-link" href="./signup">Signup</a></li>
+                {% else %}
+                <li class="nav-item"><span class="navbar-text">Benvingut, {{ session.username }}</span></li>
+                {% endif %}
             </ul>
-           <!-- <div class="d-flex">
-                <a href="./login" class="btn btn-outline-light me-2">Login</a>
-                <a href="./signup" class="btn btn-light">Sign-up</a>
-            </div>-->
         </div>
     </div>
 </nav>
