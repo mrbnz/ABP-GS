@@ -1,0 +1,22 @@
+<div class="container d-flex align-items-center justify-content-center ">
+    <div class="rounded border border-secondary col-lg-4 col-md-6 col-sm-8 m-3 p-4 shadow">
+        <form id="FrmLogin" action="login" method="POST" class="form">
+            <div class="mb-3">
+                <label for="usuari" class="form-label">Usuari:</label>
+                <input type="text" class="form-control" name="usuari" id="usuari" placeholder="Introdueix el teu usuari" required>
+            </div>
+            <div class="mb-3">
+                <label for="contrasenya" class="form-label">Contrasenya:</label>
+                <input type="password" class="form-control" name="contrasenya" id="contrasenya" placeholder="Introdueix la teva contrasenya" required>
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" name="recordar" id="recordar">
+                <label for="recordar" class="form-check-label">Recorda'm</label>
+            </div>
+            <div class="d-flex justify-content-end">
+                <input type="submit" value='Entrar' class="btn btn-primary">
+            </div>
+        </form>
+    </div>
+    <div id='missatge' class="text-danger mt-3">{{ MISSATGE }}</div>
+</div>

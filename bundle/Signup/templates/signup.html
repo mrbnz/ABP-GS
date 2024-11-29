@@ -1,0 +1,62 @@
+<div class="container d-flex align-items-center justify-content-center ">
+    <div class="rounded border border-secondary col-lg-8 col-md-10 col-sm-12 m-3 p-4 shadow">
+        <form id="FrmSignup" action="signup" method="POST" class="form">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="usuari" class="form-label">Usuari:</label>
+                    <input type="text" class="form-control" name="nom_usuari" id="usuari" placeholder="Introdueix el teu usuari" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="correu" class="form-label">Correu electrònic:</label>
+                    <input type="email" class="form-control" name="email" id="correu" placeholder="Introdueix el teu correu electrònic" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="contrasenya" class="form-label">Contrasenya:</label>
+                    <input type="password" class="form-control" name="contrasenya" id="contrasenya" placeholder="Introdueix la teva contrasenya" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="confirmar_contrasenya" class="form-label">Confirma la contrasenya:</label>
+                    <input type="password" class="form-control" name="confirmar_contrasenya" id="confirmar_contrasenya" placeholder="Confirma la teva contrasenya" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="prefix_telefon" class="form-label">Prefix del Telèfon:</label>
+                    <select class="form-control" name="prefix_telefon" id="prefix_telefon" disabled>
+                        <option value="">Selecciona el prefix</option>
+                        <option value="34">+34 - Espanya</option>
+                        <option value="1">+1 - Estats Units</option>
+                        <option value="44">+44 - Regne Unit</option>
+                        <option value="49">+49 - Alemanya</option>
+                        <option value="33">+33 - França</option>
+                        <option value="39">+39 - Itàlia</option>
+                        <option value="61">+61 - Austràlia</option>
+                        <option value="81">+81 - Japó</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="telefon" class="form-label">Telèfon:</label>
+                    <input type="tel" class="form-control" name="telefon" id="telefon" placeholder="Introdueix el teu telèfon" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="dni" class="form-label">DNI:</label>
+                    <input type="text" class="form-control" name="dni" id="dni" placeholder="Introdueix el teu DNI" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="nom" class="form-label">Nom:</label>
+                    <input type="text" class="form-control" name="nom" id="nom" placeholder="Introdueix el teu nom" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="cognoms" class="form-label">Cognoms:</label>
+                    <input type="text" class="form-control" name="cognoms" id="cognoms" placeholder="Introdueix els teus cognoms" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="data_naixement" class="form-label">Data de naixement:</label>
+                    <input type="date" class="form-control" name="data_naixement" id="data_naixement" required>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end">
+                <input type="submit" value='Registrar' class="btn btn-primary">
+            </div>
+        </form>
+    </div>
+    <div id='missatge' class="text-danger mt-3">{{ MISSATGE }}</div>
+</div> 
