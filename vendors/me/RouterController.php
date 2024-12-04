@@ -107,4 +107,8 @@ class RouterController extends Controller
 			$this->view = 'layout';
 		}
 	}
+
+	public function setController($controller) {
+		$this->controller = $controller;
+	}
 }

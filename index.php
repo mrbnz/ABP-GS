@@ -9,6 +9,8 @@ if (function_exists('mb_internal_encoding')) {
 }
 require './config/funcionsInicials.php';
 require './config/baseDeDades.php';
+require './vendors/me/RouterController.php';
+
 $router = new RouterController();
 $router->process(array(treuWEBROOT($_SERVER['REQUEST_URI'])));
 // Rendering the view

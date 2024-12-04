@@ -4,8 +4,9 @@
 	<meta charset="UTF-8" />
 	<title>Menú Principal</title>
 	<base href="http://localhost/MVC/" />
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="./styles/style.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+	<link rel="stylesheet" href="/daw-projecte1-grup-6/styles/bootstrap-colors.css">
 	<style>
 		.carousel {
 			max-width: 100%; /* Ajustar el tamaño del carrousel */
@@ -15,6 +16,31 @@
 			height: 750px; /* Ajustar la altura de las imágenes */
 			object-fit: cover; /* Mantener la proporción de la imagen */
 			width: 100%; /* Asegurar que la imagen ocupe todo el ancho */
+		}
+		body {
+			font-family: 'Roboto', sans-serif;
+			background-color: #f0f2f5;
+		}
+		.navbar {
+			background-color: #343a40;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		}
+		.footer {
+			background-color: #343a40;
+			color: #ffffff;
+			padding: 20px 0;
+		}
+		.card {
+			border: none;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		}
+		.btn-primary {
+			background-color: #007bff;
+			border: none;
+			transition: background-color 0.3s;
+		}
+		.btn-primary:hover {
+			background-color: #0056b3;
 		}
 	</style>
 </head>
@@ -98,8 +124,7 @@
 </div>
 <!-- Fi del llistat d'activitats -->
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
