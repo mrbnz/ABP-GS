@@ -5,6 +5,4 @@ class RouterController {
     public function setController($controller) {
         $this->controller = $controller;
     }
-
-    // ... otros métodos y propiedades ...
 } 

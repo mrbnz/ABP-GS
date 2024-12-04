@@ -2,7 +2,7 @@ Options -Indexes
 Options FollowSymLinks
 Options SymLinksIfOwnerMatch
 RewriteEngine On
-RewriteBase /MVC
+RewriteBase /ABP-GS
 AddType application/x-httpd-php .php .phtml
 
 RewriteCond %{REQUEST_FILENAME} !-f

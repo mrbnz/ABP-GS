@@ -1,8 +1,8 @@
 <?php
 
 //valors per defecte
-define('WEBBASE', "http://localhost/MVC/");
-define('DIRBASE', "/var/www/html/exercicism07/MVC"); 
+define('WEBBASE', "http://localhost/ABP-GS/");
+define('DIRBASE', "/var/www/html/exercicism07/ABP-GS"); 
 define('WEBROOT', str_replace("index.php", "", $_SERVER["SCRIPT_NAME"]));
 define('ESTILS', "styles/style.css");
 define('PGDEFAULT', "");
@@ -14,7 +14,7 @@ define('DESCRIPCIO', "");
 
 
 /**
-	Funci� que treu WEBROOT de la URL
+	Funci que treu WEBROOT de la URL
 **/
 function treuWEBROOT($cadena) {
 	if (stripos($cadena, WEBROOT) == 0) {
