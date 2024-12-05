@@ -5,8 +5,10 @@
 		// Camps bdd
 		private $id;
 		private $nom;
+		private $cognoms;
 		private $email;
 		private $telefon;
+		private $dni;
 		private $dataNaixement;
 		private $nomUsuari;
 		private $contrassenya;
@@ -20,8 +22,10 @@
 			if ($valors == null) {
 				$this->id = null;
 				$this->nom = null;
+				$this->cognoms = null;
 				$this->email = null;
 				$this->telefon = null;
+				$this->dni = null;
 				$this->dataNaixement = null;
 				$this->nomUsuari = null;
 				$this->contrassenya = null;
@@ -33,12 +37,14 @@
 				if (is_array($valors)) {
 					if (isset($valors["id"])) $this->id = $valors["id"];
 					if (isset($valors["nom"])) $this->nom = $valors["nom"];	
+					if (isset($valors["cognoms"])) $this->cognoms = $valors["cognoms"];
 					if (isset($valors["email"])) $this->email = $valors["email"];
 					if (isset($valors["telefon"])) $this->telefon = $valors["telefon"];
-					if (isset($valors["dataNaixement"])) $this->dataNaixement = $valors["dataNaixement"];	
-					if (isset($valors["nomUsuari"])) $this->nomUsuari = $valors["nomUsuari"];	
+					if (isset($valors["dni"])) $this->dni = $valors["dni"];
+					if (isset($valors["data_naixement"])) $this->dataNaixement = $valors["data_naixement"];	
+					if (isset($valors["nom_usuari"])) $this->nomUsuari = $valors["nom_usuari"];	
 					if (isset($valors["contrassenya"])) $this->contrassenya = $valors["contrassenya"];
-					if (isset($valors["dataCreacio"])) $this->dataCreacio = $valors["dataCreacio"];	
+					if (isset($valors["data_creacio"])) $this->dataCreacio = $valors["data_creacio"];	
 					if (isset($valors["administrador"])) $this->administrador = $valors["administrador"];							
 					
 				}
@@ -66,6 +72,16 @@
 			if (isset($nom)) $this->nom = $nom;
 		}
 	
+		public function getCognoms()
+		{
+			return $this->cognoms;
+		}
+	
+		public function setCognoms($cognoms)
+		{
+			if (isset($cognoms)) $this->cognoms = $cognoms;
+		}
+	
 		public function getEmail()
 		{
 			return $this->email;
@@ -84,6 +100,16 @@
 		public function setTelefon($telefon)
 		{
 			if (isset($telefon)) $this->telefon = $telefon;
+		}
+	
+		public function getDni()
+		{
+			return $this->dni;
+		}
+	
+		public function setDni($dni)
+		{
+			if (isset($dni)) $this->dni = $dni;
 		}
 	
 		public function getDataNaixement()
@@ -139,7 +165,7 @@
 		// Mètode __toString per representar l'objecte com a cadena
 		public function __toString()
 		{
-			return "EditorialISBN [id=$this->id, nom=$this->nom, email=$this->email, telefon=$this->telefon, dataNaixement=$this->dataNaixement, nomUsuari=$this->nomUsuari, contrassenya=$this->contrassenya, dataCreacio=$this->dataCreacio, administrador=$this->administrador]";
+			return "EditorialISBN [id=$this->id, nom=$this->nom, cognoms=$this->cognoms, email=$this->email, telefon=$this->telefon, dni=$this->dni, dataNaixement=$this->dataNaixement, nomUsuari=$this->nomUsuari, contrassenya=$this->contrassenya, dataCreacio=$this->dataCreacio, administrador=$this->administrador]";
 		}
 	}
 ?>
