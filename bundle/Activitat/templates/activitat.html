@@ -13,11 +13,12 @@
     </button>
   </div>
 
-  <div style="display: flex;justify-content: space-between;">
+  <div style="display: flex;justify-content: space-between; margin: 0 100px;">
 
-    <div style="height: 50px;width: 200px;border: 1px solid black;">
+    <div>
+      <p>TIPUS D'ACTIVITATS</p>
       <select  style="height: 50px;width: 200px;">
-        <option selected>TIPUS D'ACTIVITATS</option>
+        <option selected></option>
         {% for tipus in llistaTipus %}
           <option value="{{tipus.nom}}">{{tipus.nom}}</option>
         {% endfor %}
@@ -26,8 +27,9 @@
 
 
     <div class="filtres">
+      <p>ESPAI</p>
       <select  style="height: 50px;width: 200px;">
-        <option selected>ESPAI</option>
+        <option selected></option>
         {% for espai in llistaEspai %}
           <option value="{{espai.nom}}">{{espai.nom}}</option>
         {% endfor %}
@@ -42,15 +44,40 @@
     </div>
 
     <div>PREU</div>
+    
     <div>
+      <p>PAGINACIÓ</p>
       <select  style="height: 50px;width: 200px;">
-      <option selected>PACINACIÓ</option>
-      <option value="8">8</option>
-      <option value="12">12</option>
-      <option value="16">16</option>
+      <option selected></option>
+      <option value="8">8 activitats / página</option>
+      <option value="12">12 activitats / página</option>
+      <option value="16">16 activitats / página</option>
     </select>
   </div>
   </div>
-  <div></div>
 
+    <!-- Llistat d'activitats -->
+<div class="container mt-4">
+  <h1 class="text-center">Activitats</h1>
+  <ul class="list-group">
+      {% if activitatLlista is not empty %}
+          {% for activitat in activitatLlista %}
+              <li class="list-group-item d-flex justify-content-between align-items-center" onclick="window.location.href='http://localhost/ABP-GS/activitat/{{ activitat.id }}'">
+                  <div>
+                      <h5 class="card-title">{{ activitat.nom }}</h5>
+                      <p class="card-text">{{ activitat.descripcio_breu }}</p>
+                  </div>
+                  <!-- <a href="http://localhost/ABP-GS/activitat/{{ activitat.id }}" class="btn btn-danger">Veure més</a> -->
+              </li>
+          {% endfor %}
+      {% else %}
+          <li class="list-group-item text-center">No hi ha activitats disponibles.</li>
+      {% endif %}
+  </ul>
+</div>
+<!-- Fi del llistat d'activitats -->
+
+<script>
+  
+</script>
   
