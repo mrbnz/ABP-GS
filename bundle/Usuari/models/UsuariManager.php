@@ -18,8 +18,8 @@ class UsuariManager extends Usuari
 			if ($consulta->rowCount() > 0) {
 				$consulta->setFetchMode(PDO::FETCH_ASSOC);
 				$resposta = $consulta->fetch();
-				$this->nom = $resposta["nom"];
-				$this->contrasenya = $resposta["contrasenya"];
+				$this->setNom($resposta["nom"]);
+				$this->setContrasenya($resposta["contrasenya"]);
 			}
 		} catch (PDOException $e) {
 			echo "***Error***: " . $e->getMessage();
@@ -35,17 +35,18 @@ class UsuariManager extends Usuari
 		} else {
 			try {
 				$consulta = (BdD::$connection)->prepare('
-					SELECT contrassenya
+					SELECT contrassenya, administrador
 					FROM usuari
 					WHERE nom_usuari = :nom_usuari
 				');
-
+	
 				$consulta->bindValue(':nom_usuari', $nom_usuari);
 				$consulta->execute();
 				$resultado = $consulta->fetch(PDO::FETCH_ASSOC);
-
+	
 				if ($resultado && password_verify($contrasenya, $resultado["contrassenya"])) {
 					$_SESSION['username'] = $nom_usuari;
+					$_SESSION['is_admin'] = $resultado['administrador']; // Guardar si és administrador
 					return true;
 				} else {
 					echo "<script>alert('Contrasenya incorrecta');</script>";
@@ -92,6 +93,57 @@ class UsuariManager extends Usuari
 			$consulta->bindValue(':administrador', $es_admin);
 			$consulta->execute();
 
+			return true;
+		} catch (PDOException $e) {
+			echo "***Error***: " . $e->getMessage();
+			return false;
+		}
+	}
+
+	public function esAdmin()
+	{
+		// Comprovar si la sessió està iniciada i si l'usuari és administrador
+		return isset($_SESSION['is_admin']) && $_SESSION['is_admin'];
+	}
+
+	public function getUserById($userId)
+	{
+		try {
+			$consulta = (BdD::$connection)->prepare('SELECT * FROM usuari WHERE id = :id');
+			$consulta->execute(['id' => $userId]);
+			return $consulta->fetch(PDO::FETCH_ASSOC);
+		} catch (PDOException $e) {
+			echo "***Error***: " . $e->getMessage();
+			return false;
+		}
+	}
+
+	public function updateUser($userId, $nomUsuari, $email, $telefon, $dni, $dataNaixement, $nom, $cognoms, $administrador)
+	{
+		try {
+			$consulta = (BdD::$connection)->prepare('
+				UPDATE usuari SET 
+					nom_usuari = :nom_usuari, 
+					email = :email, 
+					telefon = :telefon, 
+					dni = :dni, 
+					data_naixement = :data_naixement, 
+					nom = :nom, 
+					cognoms = :cognoms, 
+					administrador = :administrador 
+				WHERE id = :id
+			');
+			$consulta->execute([
+				'nom_usuari' => $nomUsuari,
+				'email' => $email,
+				'telefon' => $telefon,
+				'dni' => $dni,
+				'data_naixement' => $dataNaixement,
+				'nom' => $nom,
+				'cognoms' => $cognoms,
+				'administrador' => $administrador,
+				'id' => $userId
+			]);
 			return true;
 		} catch (PDOException $e) {
 			echo "***Error***: " . $e->getMessage();
