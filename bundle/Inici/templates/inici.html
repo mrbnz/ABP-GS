@@ -47,35 +47,26 @@
 
 <body>
 <!-- Inici del carrusel -->
-<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-	<ol class="carousel-indicators">
-		<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-		<li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-		<li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-		<li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
-	</ol>
+<div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
 	<div class="carousel-inner">
-		<div class="carousel-item active">
-			<img src="./images/imgGironaCarr.jpeg" class="d-block w-100" alt="...">
-		</div>
-		<div class="carousel-item">
-			<img src="./images/img2.jpeg" class="d-block w-100" alt="...">
-		</div>
-		<div class="carousel-item">
-			<img src="./images/img3.jpeg" class="d-block w-100" alt="...">
-		</div>
-		<div class="carousel-item">
-			<img src="./images/img4.jpeg" class="d-block w-100" alt="...">
-		</div>
+	  <div class="carousel-item active" data-bs-interval="10000">
+		<img src="./images/img2.jpeg" class="d-block w-100" alt="Imatge 5">
+	  </div>
+	  <div class="carousel-item" data-bs-interval="2000">
+		<img src="./images/img3.jpeg" class="d-block w-100" alt="Imatge 6">
+	  </div>
+	  <div class="carousel-item">
+		<img src="./images/img4.jpeg" class="d-block w-100" alt="Imatge 7">
+	  </div>
 	</div>
-	<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-		<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-		<span class="sr-only">Anterior</span>
-	</a>
-	<a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-		<span class="carousel-control-next-icon" aria-hidden="true"></span>
-		<span class="sr-only">Següent</span>
-	</a>
+	<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+	  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+	  <span class="visually-hidden">Anterior</span>
+	</button>
+	<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+	  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+	  <span class="visually-hidden">Següent</span>
+	</button>
 </div>
 <!-- Fi del carrusel -->
 
@@ -88,20 +79,21 @@
 <!-- Llistat d'activitats -->
 <div class="container mt-4">
     <h1 class="text-center">Activitats</h1>
-    <div class="row">
-        {% for activitat in activitatLlista %}
-            <div class="col-md-3">
-                <div class="card mb-4">
-                    <div class="card-body">
+    <ul class="list-group">
+        {% if activitatLlista is not empty %}
+            {% for activitat in activitatLlista %}
+                <li class="list-group-item d-flex justify-content-between align-items-center" onclick="window.location.href='http://localhost/ABP-GS/activitat/{{ activitat.id }}'">
+                    <div>
                         <h5 class="card-title">{{ activitat.nom }}</h5>
                         <p class="card-text">{{ activitat.descripcio_breu }}</p>
                     </div>
-                </div>
-            </div>
+                    <!-- <a href="http://localhost/ABP-GS/activitat/{{ activitat.id }}" class="btn btn-danger">Veure més</a> -->
+                </li>
+            {% endfor %}
         {% else %}
-            <p>No hi ha activitats disponibles.</p>
-        {% endfor %}
-    </div>
+            <li class="list-group-item text-center">No hi ha activitats disponibles.</li>
+        {% endif %}
+    </ul>
 </div>
 <!-- Fi del llistat d'activitats -->
 
