@@ -1,66 +1,63 @@
 <div class="container d-flex align-items-center justify-content-center vh-100">
-    <div class="col-md-6">
-        <form id="FrmSignup" action="signup" method="POST" class="form-signin">
-            <h1 class="h3 mb-3 fw-normal text-center">Registra't</h1>
-            <div class="row">
+    <div class="col-md-8">
+        <form id="FrmSignup" action="signup" method="POST" class="p-3">
+            <h1 class="h3 mb-4 fw-bold text-center">Registra't</h1>
+            <div class="row g-3">
+                <!-- Columna izquierda -->
                 <div class="col-md-6">
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control" name="nom_usuari" id="usuari" placeholder="Usuari" required>
+                    <div class="form-floating">
                         <label for="usuari">Usuari</label>
+                        <input type="text" class="form-control" name="nom_usuari" id="usuari" placeholder="Usuari" required>
                     </div>
-                    <div class="form-floating mb-3">
-                        <input type="email" class="form-control" name="email" id="correu" placeholder="Correu electrònic" required>
+                    <div class="form-floating">
                         <label for="correu">Correu electrònic</label>
+                        <input type="email" class="form-control" name="email" id="correu" placeholder="Correu electrònic" required>
                     </div>
-                    <div class="form-floating mb-3">
-                        <input type="password" class="form-control" name="contrasenya" id="contrasenya" placeholder="Contrasenya" required>
+                    <div class="form-floating">
                         <label for="contrasenya">Contrasenya</label>
+                        <input type="password" class="form-control" name="contrasenya" id="contrasenya" placeholder="Contrasenya" required>
                     </div>
-                    <div class="form-floating mb-3">
-                        <input type="password" class="form-control" name="confirmar_contrasenya" id="confirmar_contrasenya" placeholder="Confirma la contrasenya" required>
+                    <div class="form-floating">
                         <label for="confirmar_contrasenya">Confirma la contrasenya</label>
+                        <input type="password" class="form-control" name="confirmar_contrasenya" id="confirmar_contrasenya" placeholder="Confirma la contrasenya" required>
                     </div>
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control" name="dni" id="dni" placeholder="DNI" required>
+                    <div class="form-floating">
                         <label for="dni">DNI</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control" name="nom" id="nom" placeholder="Nom" required>
-                        <label for="nom">Nom</label>
+                        <input type="text" class="form-control" name="dni" id="dni" placeholder="DNI" required>
                     </div>
                 </div>
+                <!-- Columna derecha -->
                 <div class="col-md-6">
-                    <div class="form-floating mb-3">
-                        <select class="form-control" name="prefix_telefon" id="prefix_telefon" required>
-                            <option value="">Selecciona el prefix</option>
+                    <div class="form-floating">
+                        <label for="prefix_telefon">Prefix del Telèfon</label>
+                        <select class="form-select" name="prefix_telefon" id="prefix_telefon" required>
+                            <option value="" selected>Selecciona el prefix</option>
                             <option value="34">+34 - Espanya</option>
                             <option value="1">+1 - Estats Units</option>
                             <option value="44">+44 - Regne Unit</option>
-                            <option value="49">+49 - Alemanya</option>
-                            <option value="33">+33 - França</option>
-                            <option value="39">+39 - Itàlia</option>
-                            <option value="61">+61 - Austràlia</option>
-                            <option value="81">+81 - Japó</option>
                         </select>
-                        <label for="prefix_telefon">Prefix del Telèfon</label>
                     </div>
-                    <div class="form-floating mb-3">
-                        <input type="tel" class="form-control" name="telefon" id="telefon" placeholder="Telèfon" required>
+                    <div class="form-floating">
                         <label for="telefon">Telèfon</label>
+                        <input type="tel" class="form-control" name="telefon" id="telefon" placeholder="Telèfon" required>
                     </div>
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control" name="cognoms" id="cognoms" placeholder="Cognoms" required>
+                    <div class="form-floating">
+                        <label for="nom">Nom</label>
+                        <input type="text" class="form-control" name="nom" id="nom" placeholder="Nom" required>
+                    </div>
+                    <div class="form-floating">
                         <label for="cognoms">Cognoms</label>
+                        <input type="text" class="form-control" name="cognoms" id="cognoms" placeholder="Cognoms" required>
                     </div>
-                    <div class="form-floating mb-3">
-                        <input type="date" class="form-control" name="data_naixement" id="data_naixement" required>
+                    <div class="form-floating">
                         <label for="data_naixement">Data de naixement</label>
+                        <input type="date" class="form-control" name="data_naixement" id="data_naixement" required>
                     </div>
                 </div>
             </div>
-            <button class="w-100 btn btn-lg" type="submit" style="background-color: #B71C1C; color: white;">Registrar</button>
-            <p class="mt-5 mb-3 text-muted text-center">© 2024–2024</p>
+            <button class="w-100 btn btn-danger btn-lg mt-4" type="submit">Registrar</button>
+            <p class="mt-3 text-center text-muted">© 2024</p>
         </form>
+        <div id="missatge" class="text-danger mt-3 text-center">{{ MISSATGE }}</div>
     </div>
-    <div id='missatge' class="text-danger mt-3 text-center">{{ MISSATGE }}</div>
-</div> 
+</div>

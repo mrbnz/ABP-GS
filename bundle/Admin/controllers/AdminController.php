@@ -38,15 +38,15 @@ class AdminController extends Controller
                     $nom = $_POST['nom'] ?? null;
                     $cognoms = $_POST['cognoms'] ?? null;
                     $administrador = $_POST['administrador'] ?? null;
-                
-                    if ($userId && $nomUsuari && $email && $telefon && $dni && $dataNaixement && $nom && $cognoms && $administrador) {
+
+                    if ($userId && $nomUsuari && $email && $telefon && $dni && $dataNaixement && $nom && $cognoms && $administrador !== null) {
                         if ($usuariMng->updateUser($userId, $nomUsuari, $email, $telefon, $dni, $dataNaixement, $nom, $cognoms, $administrador)) {
-                            $this->data['success'] = "Usuari actualitzat correctament.";
+                            echo "Usuari actualitzat correctament.";
                         } else {
-                            $this->data['error'] = "Error en actualitzar l'usuari.";
+                            echo "Error en actualitzar l'usuari.";
                         }
                     } else {
-                        $this->data['error'] = "Falten dades!";
+                        echo "Falten dades!";
                     }
                     $this->twig = 'edit_user.html';
                 }
@@ -58,10 +58,27 @@ class AdminController extends Controller
                 $this->twig = 'assign_activity.html';
                 break;
             case 'delete_user':
+                if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['userId'])) {
+                    $userId = $_POST['userId'];
+                    if ($usuariMng->deleteUser($userId)) {
+                        echo "Usuari eliminat correctament.";
+                    } else {
+                        echo "Error en eliminar l'usuari.";
+                    }
+                }
                 $this->twig = 'delete_user.html';
                 break;
             case 'config':
                 $this->twig = 'config.html';
+                break;
+            case 'view_users':
+                $users = $usuariMng->getAllUsers();
+                if ($users) {
+                    $this->data['users'] = $users;
+                } else {
+                    $this->data['error'] = "No s'han pogut obtenir els usuaris.";
+                }
+                $this->twig = 'view_users.html';
                 break;
             default:
                 $this->twig = 'admin.html';

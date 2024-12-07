@@ -4,29 +4,6 @@ include('./config/include.php');
 class UsuariManager extends Usuari
 {
 
-	public function selectUn()
-	{
-		$resposta = null;
-		try {
-			$consulta = (BdD::$connection)->prepare('
-					SELECT *
-					FROM usuaris
-					WHERE `id` = :id
-				');
-			$consulta->bindParam('id', $this->id);
-			$consulta->execute();
-			if ($consulta->rowCount() > 0) {
-				$consulta->setFetchMode(PDO::FETCH_ASSOC);
-				$resposta = $consulta->fetch();
-				$this->setNom($resposta["nom"]);
-				$this->setContrasenya($resposta["contrasenya"]);
-			}
-		} catch (PDOException $e) {
-			echo "***Error***: " . $e->getMessage();
-		}
-		return $resposta;
-	}
-
 	public function verificar($nom_usuari, $contrasenya)
 	{
 		if (isset($_SESSION['username'])) {
@@ -111,7 +88,19 @@ class UsuariManager extends Usuari
 		try {
 			$consulta = (BdD::$connection)->prepare('SELECT * FROM usuari WHERE id = :id');
 			$consulta->execute(['id' => $userId]);
-			return $consulta->fetch(PDO::FETCH_ASSOC);
+			$resultat = $consulta->fetch(PDO::FETCH_ASSOC);
+
+			if ($resultat) {
+				// Convertir les dates a un format adequat si cal
+				if (isset($resultat['data_naixement'])) {
+					$resultat['data_naixement'] = date('Y-m-d', strtotime($resultat['data_naixement']));
+				}
+				if (isset($resultat['data_creacio'])) {
+					$resultat['data_creacio'] = date('Y-m-d H:i:s', strtotime($resultat['data_creacio']));
+				}
+			}
+
+			return $resultat;
 		} catch (PDOException $e) {
 			echo "***Error***: " . $e->getMessage();
 			return false;
@@ -133,18 +122,48 @@ class UsuariManager extends Usuari
 					administrador = :administrador 
 				WHERE id = :id
 			');
-			$consulta->execute([
-				'nom_usuari' => $nomUsuari,
-				'email' => $email,
-				'telefon' => $telefon,
-				'dni' => $dni,
-				'data_naixement' => $dataNaixement,
-				'nom' => $nom,
-				'cognoms' => $cognoms,
-				'administrador' => $administrador,
-				'id' => $userId
-			]);
+
+			$consulta->bindParam(':nom_usuari', $nomUsuari);
+			$consulta->bindParam(':email', $email);
+			$consulta->bindParam(':telefon', $telefon);
+			$consulta->bindParam(':dni', $dni);
+			$consulta->bindParam(':data_naixement', $dataNaixement);
+			$consulta->bindParam(':nom', $nom);
+			$consulta->bindParam(':cognoms', $cognoms);
+			$consulta->bindParam(':administrador', $administrador);
+			$consulta->bindParam(':id', $userId);
+
+			$consulta->execute();
+
+			echo "Actualització executada correctament.\n";
 			return true;
+		} catch (PDOException $e) {
+			echo "***Error***: " . $e->getMessage() . "\n";
+			return false;
+		}
+	}
+
+	public function deleteUser($userId)
+	{
+		try {
+			$consulta = (BdD::$connection)->prepare('DELETE FROM usuari WHERE id = :id');
+			$consulta->bindParam(':id', $userId);
+			$consulta->execute();
+
+			echo "Usuari eliminat correctament.\n";
+			return true;
+		} catch (PDOException $e) {
+			echo "***Error***: " . $e->getMessage() . "\n";
+			return false;
+		}
+	}
+
+	public function getAllUsers()
+	{
+		try {
+			$consulta = (BdD::$connection)->prepare('SELECT * FROM usuari');
+			$consulta->execute();
+			return $consulta->fetchAll(PDO::FETCH_ASSOC);
 		} catch (PDOException $e) {
 			echo "***Error***: " . $e->getMessage();
 			return false;
