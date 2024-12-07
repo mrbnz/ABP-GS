@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veure Usuaris</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Llista d'Usuaris</h1>
+        {% if users %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom d'Usuari</th>
+                        <th>Email</th>
+                        <th>Telèfon</th>
+                        <th>DNI</th>
+                        <th>Data de Naixement</th>
+                        <th>Administrador</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.nom_usuari }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.telefon }}</td>
+                            <td>{{ user.dni }}</td>
+                            <td>{{ user.data_naixement }}</td>
+                            <td>{{ user.administrador ? 'Sí' : 'No' }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="text-center">No hi ha usuaris disponibles.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

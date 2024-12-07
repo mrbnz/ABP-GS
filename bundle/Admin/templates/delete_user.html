@@ -9,9 +9,11 @@
 <body>
     <div class="container my-5">
         <h1 class="text-center mb-4">Eliminar Usuari</h1>
-        <p>Estàs segur que vols eliminar aquest usuari?</p>
-        <form method="POST" action="/admin/delete_user">
-            <input type="hidden" name="userId" value="{{ userId }}">
+        <form method="POST" action="/ABP-GS/admin/delete_user" class="mb-4">
+            <div class="mb-3">
+                <label for="userId" class="form-label">ID de l'Usuari</label>
+                <input type="text" class="form-control" id="userId" name="userId" required placeholder="Introdueix l'ID de l'usuari">
+            </div>
             <button type="submit" class="btn btn-danger">Eliminar</button>
             <a href="/admin" class="btn btn-secondary">Cancel·lar</a>
         </form>
