@@ -4,9 +4,11 @@ class SignupController extends Controller
 {
     public function process($params)
     {
+        $this->data['debug'] = "";
+
         if (isset($_SESSION['username'])) {
             $this->data['missatge'] = "Ja estàs logat com a " . $_SESSION['username'] . ". No pots registrar-te de nou.";
-			$this->redirect("");
+            $this->redirect("");
             return;
         }
 
@@ -21,31 +23,30 @@ class SignupController extends Controller
             $cognoms = filter_input(INPUT_POST, 'cognoms', FILTER_SANITIZE_STRING);
             $data_naixement = filter_input(INPUT_POST, 'data_naixement', FILTER_SANITIZE_STRING);
 
-            echo "Dades rebudes: Usuari: $nom_usuari, Email: $email, Telèfon: $telefon, DNI: $dni, Nom: $nom, Cognoms: $cognoms, Data de naixement: $data_naixement<br>";
+            $this->data['debug'] .= " Totes les dades són presents.";
+            $this->data['debug'] .= " Les contrasenyes coincideixen.";
+
+            $this->data['debug'] = "Dades rebudes: Usuari: $nom_usuari, Email: $email, Telèfon: $telefon, DNI: $dni, Nom: $nom, Cognoms: $cognoms, Data de naixement: $data_naixement";
 
             if ($nom_usuari && $email && $contrasenya && $confirmar_contrasenya && $telefon && $dni && $nom && $cognoms && $data_naixement) {
-                echo "Totes les dades són presents.<br>";
+                $this->data['debug'] .= " Totes les dades són presents.";
                 if ($contrasenya === $confirmar_contrasenya) {
-                    echo "Les contrasenyes coincideixen.<br>";
+                    $this->data['debug'] .= " Les contrasenyes coincideixen.";
                     $UsuariMng = new UsuariManager();
                     $hashedPassword = password_hash($contrasenya, PASSWORD_BCRYPT);
                     if ($UsuariMng->registrar($nom_usuari, $email, $hashedPassword, $telefon, $dni, $data_naixement, $nom, $cognoms)) {
-                        echo "Registre exitós per l'usuari: $nom_usuari<br>";
+                        $this->data['success'] = "Registre exitós per l'usuari: $nom_usuari";
                         $this->login($nom_usuari);
                         $this->redirect("");
-                        $this->data['success'] = "Registre exitós per l'usuari: $nom_usuari";
                     } else {
-                        echo "Error en el registre per l'usuari: $nom_usuari<br>";
                         $this->data['error'] = "Error en el registre per l'usuari: $nom_usuari";
                         $this->twig = "signup.html";
                     }
                 } else {
-                    echo "Les contrasenyes no coincideixen!<br>";
                     $this->data['error'] = "Les contrasenyes no coincideixen!";
                     $this->twig = "signup.html";
                 }
             } else {
-                echo "Falten dades!<br>";
                 $this->data['error'] = "Falten dades!";
                 $this->twig = "signup.html";
             }
@@ -53,7 +54,7 @@ class SignupController extends Controller
             $this->twig = "signup.html";
         }
 
-        $this->data['debug'] = "Totes les dades són presents.";
-        $this->data['debug'] = "Les contrasenyes coincideixen.";
+        $this->data['debug'] .= " Totes les dades són presents.";
+        $this->data['debug'] .= " Les contrasenyes coincideixen.";
     }
 } 
