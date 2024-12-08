@@ -72,6 +72,19 @@
                     <div class="card-body">
                         <p class="card-text">Afegiu, editeu o elimineu usuaris del sistema.</p>
                         <div class="d-flex flex-column">    
+                            {% if error %}
+                                <div class="alert alert-danger">{{ error }}</div>
+                            {% endif %}
+                            {% if success %}
+                                <div class="alert alert-success">{{ success }}</div>
+                            {% endif %}
+                            {% if missatge %}
+                                <div class="alert alert-info">{{ missatge }}</div>
+                            {% endif %}
+                            {% if debug %}
+                                <div class="alert alert-secondary">{{ debug }}</div>
+                            {% endif %}
+                            
                             <a href="/ABP-GS/admin/edit_user" class="btn btn-primary mb-2">Editar Usuari</a>
                             <a href="/ABP-GS/admin/delete_user" class="btn btn-danger mb-2">Eliminar Usuari</a>
                             <a href="/ABP-GS/admin/view_users" class="btn btn-info">Veure Usuaris</a>

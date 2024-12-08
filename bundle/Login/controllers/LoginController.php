@@ -24,6 +24,7 @@ class LoginController extends Controller
 			} else {
 				echo "<script>console.log('No s'ha pogut determinar l'usuari logat.');</script>";
 			}
+			$this->data['debug'] = "L'usuari ja està logat";
 			$this->redirect("");
 		} else {
 			if ($_POST) {
@@ -36,19 +37,21 @@ class LoginController extends Controller
 					if ($UsuariMng->verificar($nom_usuari, $contrasenya)) {
 						echo "Login exitós per l'usuari: " . $nom_usuari . "<br>";
 						$this->login($nom_usuari);
+						$this->data['success'] = "Login exitós per l'usuari: " . $nom_usuari;
 						$this->redirect("");
 					} else {
 						echo "Login fallit per l'usuari: " . $nom_usuari . "<br>";
-						$this->data["missatge"] = "Usuari o contrasenya incorrecte!";
+						$this->data['error'] = "Login fallit per l'usuari: " . $nom_usuari;
 						$this->twig = "login.html";
 					}
 				} else {
 					echo "Falten dades per al login<br>";
-					$this->data["missatge"] = "Falten dades!";
+					$this->data['error'] = "Falten dades per al login";
 					$this->twig = "login.html";
 				}
 			} else {
 				echo "User no logat, enviem a login<br>";
+				$this->data['debug'] = "User no logat, enviem a login";
 				$this->twig = "login.html";
 			}
 		}
@@ -59,6 +62,7 @@ class LoginController extends Controller
 		echo "S'ha cridat el mètode logout<br>";
 		$UsuariMng = new UsuariManager();
 		$UsuariMng->tancar();
+		$this->data['debug'] = "S'ha cridat Logout";
 		$this->redirect("hola");
 	}
 }

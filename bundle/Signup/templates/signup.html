@@ -61,3 +61,16 @@
         <div id="missatge" class="text-danger mt-3 text-center">{{ MISSATGE }}</div>
     </div>
 </div>
+
+{% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+{% if success %}
+    <div class="alert alert-success">{{ success }}</div>
+{% endif %}
+{% if missatge %}
+    <div class="alert alert-info">{{ missatge }}</div>
+{% endif %}
+{% if debug %}
+    <div class="alert alert-secondary">{{ debug }}</div>
+{% endif %}

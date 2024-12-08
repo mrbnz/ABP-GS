@@ -49,13 +49,17 @@
             <ul class="navbar-nav me-auto">
                 <li class="nav-item"><a class="nav-link" href="./">Inici</a></li>
                 <li class="nav-item"><a class="nav-link" href="./activitat">Activitats</a></li>
-                <li class="nav-item"><a class="nav-link" href="./admin">Admin</a></li>
-				<li class="nav-item"><a class="nav-link" href="./usuari">Usuari</a></li> 
             </ul>
             <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="./logout">Tancar sessió</a></li>
-                    <li class="nav-item"><a class="nav-link" href="./login">Iniciar sessió</a></li>
+                {% if LOGAT %}
+					<li class="nav-item"><span class="nav-link">Benvingut, <strong>{{ LOGIN_USER }}</strong></span></li>
+					<li class="nav-item"><a class="nav-link" href="./usuari">Perfil d'Usuari</a></li> 
+					<li class="nav-item"><a class="nav-link" href="./admin">Panell d'Admin</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./usuari/logout">Tancar Sessió</a></li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="./login">Iniciar Sessió</a></li>
                     <li class="nav-item"><a class="nav-link" href="./signup">Registrar-se</a></li>
+                {% endif %}
             </ul>
         </div>
     </div>
