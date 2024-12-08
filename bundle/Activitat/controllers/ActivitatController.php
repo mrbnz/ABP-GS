@@ -4,9 +4,6 @@ class ActivitatController extends Controller
 {
     public function process($params)
     {
-        // Verificar si l'usuari està actiu
-		$this->verificarUsuariActiu();
-
         $this->mostraActivitats();
         $this->mostraFiltres();
         

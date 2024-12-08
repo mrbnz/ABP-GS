@@ -9,6 +9,13 @@ class LoginController extends Controller
 	public function process($params)
 	{
 		//echo "S'ha cridat el mètode process a LoginController<br>";
+
+		// Si hem cridat a Logout
+		if (isset($params[0]) && ($params[0] == "logout")) {
+			echo "S'ha cridat Logout<br>";
+			$this->logout();
+		}
+
 		// Si estem logats ja
 		if ($this->EstaLogat()) {
 			echo "L'usuari ja està logat<br>";
@@ -45,5 +52,13 @@ class LoginController extends Controller
 				$this->twig = "login.html";
 			}
 		}
+	}
+
+	public function logout()
+	{
+		echo "S'ha cridat el mètode logout<br>";
+		$UsuariMng = new UsuariManager();
+		$UsuariMng->tancar();
+		$this->redirect("hola");
 	}
 }

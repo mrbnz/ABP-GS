@@ -119,29 +119,9 @@ abstract class Controller
 	{
 		$this->logat = false;	
 		$this->logat_user = "";	
-		session_unset(); // Esborra totes les variables de sessió
-		session_destroy(); // Destrueix la sessió
-		$this->redirect(""); // Redirigeix a la pàgina d'inici
+		$this->redirect("");
 	}
 
-	/**
-	 * Verificar usuari actiu
-	**/
-	protected function verificarUsuariActiu()
-	{
-		if (isset($_SESSION['username'])) {
-			$usuariMng = new UsuariManager();
-			$usuari = $usuariMng->getUserById($_SESSION['username']);
-			
-			if (!$usuari) {
-            // L'usuari no existeix a la base de dades, destruir la sessió
-            session_unset();
-            session_destroy();
-            $this->redirect('login'); // Redirigir a la pàgina de login
-            exit();
-        }
-        }
-    }
 
     /**
      * Renders the view

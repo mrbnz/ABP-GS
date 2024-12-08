@@ -84,7 +84,7 @@ class UsuariManager extends Usuari
 			return null;
 		}
 		try {
-			$consulta = (BdD::$connection)->prepare('SELECT id, nom_usuari, email, telefon, dni, DATE_FORMAT(data_naixement, "%Y-%m-%d") as data_naixement, nom, cognoms, administrador FROM `usuari` WHERE id = ?');
+			$consulta = (BdD::$connection)->prepare('SELECT * FROM `usuari` WHERE id = ?');
 			$consulta->execute([$userId]);
 			return $consulta->fetch(PDO::FETCH_ASSOC);
 		} catch (PDOException $e) {

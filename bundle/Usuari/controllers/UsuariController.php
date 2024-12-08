@@ -4,25 +4,19 @@ class UsuariController extends Controller
 {
     public function process($params)
     {
-        // Verificar si l'usuari està actiu
-		$this->verificarUsuariActiu();
-
         if (!isset($_SESSION['username'])) {
             $this->redirect('login');
             return;
         }
-    
+
         $action = $params[0] ?? 'panell';
-    
+
         switch ($action) {
             case 'veureInfo':
                 $this->veureInfo();
                 break;
             case 'updatePassword':
                 $this->updatePassword();
-                break;
-            case 'logout':
-                $this->logout(); // Crida al mètode logout del controlador base
                 break;
             default:
                 $this->mostrarPanell();
