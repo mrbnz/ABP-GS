@@ -4,6 +4,9 @@ class AdminController extends Controller
 {
     public function process($params)
     {
+        // Verificar si l'usuari està actiu
+		$this->verificarUsuariActiu();
+
         $usuariMng = new UsuariManager();
 
         // Comprovar si l'usuari és administrador
@@ -24,11 +27,10 @@ class AdminController extends Controller
                 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['userId'])) {
                     $userId = $_POST['userId'];
                     if (!isset($userId) || !is_numeric($userId)) {
-                        error_log("***Error***: ID no vàlid.");
+                        echo "ID no vàlid.";
                         return null;
                     }
                     $user = $usuariMng->getUserById($userId);
-                    echo "Usuari trobat: " . $user['nomUsuari'] . "<br>";
                     if ($user) {
                         $this->data['user'] = $user;
                     } else {
@@ -70,10 +72,15 @@ class AdminController extends Controller
             case 'delete_user':
                 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['userId'])) {
                     $userId = $_POST['userId'];
-                    if ($usuariMng->deleteUser($userId)) {
-                        echo "Usuari eliminat correctament.";
+                    // Comprovar si l'usuari que s'intenta eliminar és el que està loguejat
+                    if ($userId == $_SESSION['username']) {
+                        echo "No es pot eliminar l'usuari que està loguejat.";
                     } else {
-                        error_log("Error en eliminar l'usuari.");
+                        if ($usuariMng->deleteUser($userId)) {
+                            echo "Usuari eliminat correctament.";
+                        } else {
+                            error_log("Error en eliminar l'usuari.");
+                        }
                     }
                 }
                 $this->twig = 'delete_user.html';
@@ -95,5 +102,4 @@ class AdminController extends Controller
                 break;
         }
     }
-}
-?> 
+}?> 
