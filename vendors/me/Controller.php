@@ -119,9 +119,10 @@ abstract class Controller
 	{
 		$this->logat = false;	
 		$this->logat_user = "";	
-		$this->redirect("");
+		session_unset(); // Esborra totes les variables de sessió
+		session_destroy(); // Destrueix la sessió
+		$this->redirect(""); // Redirigeix a la pàgina d'inici
 	}
-
 
     /**
      * Renders the view

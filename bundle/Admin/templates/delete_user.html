@@ -8,6 +8,18 @@
 </head>
 <body>
     <div class="container my-5">
+        {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+    {% if success %}
+        <div class="alert alert-success">{{ success }}</div>
+    {% endif %}
+    {% if missatge %}
+        <div class="alert alert-info">{{ missatge }}</div>
+    {% endif %}
+    {% if debug %}
+        <div class="alert alert-secondary">{{ debug }}</div>
+    {% endif %}
         <h1 class="text-center mb-4">Eliminar Usuari</h1>
         <form method="POST" action="/ABP-GS/admin/delete_user" class="mb-4">
             <div class="mb-3">

@@ -11,8 +11,10 @@ class IniciController extends Controller
 		
 		if (is_array($activitatLlista)) {
 			$this->data['activitatLlista'] = $activitatLlista;
+			$this->data['success'] = "Activitats carregades correctament.";
 		} else {
 			$this->data['activitatLlista'] = [];
+			$this->data['error'] = "No s'han trobat activitats.";
 		}
 		
 		$this->twig = 'inici.html';

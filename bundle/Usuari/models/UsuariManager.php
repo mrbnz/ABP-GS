@@ -3,11 +3,12 @@ include('./config/include.php');
 
 class UsuariManager extends Usuari
 {
+	private $data = [];
 
 	public function verificar($nom_usuari, $contrasenya)
 	{
 		if (isset($_SESSION['username'])) {
-			echo "<div class='alert alert-info'>Ja estàs logat com a " . $_SESSION['username'] . ".</div>";
+			error_log("Ja estàs logat com a " . $_SESSION['username'] . ".");
 			return true;
 		} else {
 			try {
@@ -26,11 +27,12 @@ class UsuariManager extends Usuari
 					$_SESSION['is_admin'] = $resultado['administrador']; // Guardar si és administrador
 					return true;
 				} else {
-					echo "<script>alert('Contrasenya incorrecta');</script>";
+					error_log("Error: Contrasenya incorrecta per l'usuari " . $nom_usuari);
+					$this->data['error'] = "Contrasenya incorrecta.";
 					return false;
 				}
 			} catch (PDOException $e) {
-				echo "***Error***: " . $e->getMessage();
+				error_log("***Error***: " . $e->getMessage());
 				return false;
 			}
 		}
@@ -41,22 +43,17 @@ class UsuariManager extends Usuari
 			session_unset();
 			session_destroy();
 		} catch (PDOException $e) {
-			echo "***Error***: " . $e->getMessage();
+			error_log("***Error***: " . $e->getMessage());
 			return false;
 		}
 	}
 
-	public function Login() {
-		// Implementació del mètode Login
-		// Aquí pots afegir la lògica necessària per al login
-	}
-
-	public function registrar($nom_usuari, $email, $contrasenya, $telefon, $dni, $data_naixement, $nom, $cognoms, $es_admin)
+	public function registrar($nom_usuari, $email, $contrasenya, $telefon, $dni, $data_naixement, $nom, $cognoms)
 	{
 		try {
 			$consulta = (BdD::$connection)->prepare('
-				INSERT INTO usuari (nom_usuari, email, contrassenya, telefon, dni, data_naixement, nom, cognoms, administrador)
-				VALUES (:nom_usuari, :email, :contrasenya, :telefon, :dni, :data_naixement, :nom, :cognoms, :administrador)
+				INSERT INTO usuari (nom_usuari, email, contrassenya, telefon, dni, data_naixement, nom, cognoms)
+				VALUES (:nom_usuari, :email, :contrasenya, :telefon, :dni, :data_naixement, :nom, :cognoms)
 			');
 
 			$consulta->bindValue(':nom_usuari', $nom_usuari);
@@ -67,12 +64,11 @@ class UsuariManager extends Usuari
 			$consulta->bindValue(':data_naixement', $data_naixement);
 			$consulta->bindValue(':nom', $nom);
 			$consulta->bindValue(':cognoms', $cognoms);
-			$consulta->bindValue(':administrador', $es_admin);
 			$consulta->execute();
 
 			return true;
 		} catch (PDOException $e) {
-			echo "***Error***: " . $e->getMessage();
+			error_log("***Error***: " . $e->getMessage());
 			return false;
 		}
 	}
@@ -85,25 +81,17 @@ class UsuariManager extends Usuari
 
 	public function getUserById($userId)
 	{
+		if (!is_numeric($userId)) {
+			error_log("***Error***: ID no vàlid.");
+			return null;
+		}
 		try {
-			$consulta = (BdD::$connection)->prepare('SELECT * FROM usuari WHERE id = :id');
-			$consulta->execute(['id' => $userId]);
-			$resultat = $consulta->fetch(PDO::FETCH_ASSOC);
-
-			if ($resultat) {
-				// Convertir les dates a un format adequat si cal
-				if (isset($resultat['data_naixement'])) {
-					$resultat['data_naixement'] = date('Y-m-d', strtotime($resultat['data_naixement']));
-				}
-				if (isset($resultat['data_creacio'])) {
-					$resultat['data_creacio'] = date('Y-m-d H:i:s', strtotime($resultat['data_creacio']));
-				}
-			}
-
-			return $resultat;
+			$consulta = (BdD::$connection)->prepare('SELECT id, nom_usuari, email, telefon, dni, DATE_FORMAT(data_naixement, "%Y-%m-%d") as data_naixement, nom, cognoms, administrador FROM `usuari` WHERE id = ?');
+			$consulta->execute([$userId]);
+			return $consulta->fetch(PDO::FETCH_ASSOC);
 		} catch (PDOException $e) {
-			echo "***Error***: " . $e->getMessage();
-			return false;
+			error_log("***Error***: " . $e->getMessage());
+			return null;
 		}
 	}
 
@@ -135,10 +123,10 @@ class UsuariManager extends Usuari
 
 			$consulta->execute();
 
-			echo "Actualització executada correctament.\n";
+			error_log("Perfil actualitzat correctament per l'usuari ID: $userId");
 			return true;
 		} catch (PDOException $e) {
-			echo "***Error***: " . $e->getMessage() . "\n";
+			error_log("***Error en actualitzar el perfil per l'usuari ID: $userId***: " . $e->getMessage());
 			return false;
 		}
 	}
@@ -150,10 +138,10 @@ class UsuariManager extends Usuari
 			$consulta->bindParam(':id', $userId);
 			$consulta->execute();
 
-			echo "Usuari eliminat correctament.\n";
+			error_log("Usuari ID: $userId eliminat correctament.");
 			return true;
 		} catch (PDOException $e) {
-			echo "***Error***: " . $e->getMessage() . "\n";
+			error_log("***Error en eliminar l'usuari ID: $userId***: " . $e->getMessage());
 			return false;
 		}
 	}
@@ -165,7 +153,31 @@ class UsuariManager extends Usuari
 			$consulta->execute();
 			return $consulta->fetchAll(PDO::FETCH_ASSOC);
 		} catch (PDOException $e) {
-			echo "***Error***: " . $e->getMessage();
+			error_log("***Error en obtenir tots els usuaris***: " . $e->getMessage());
+			return false;
+		}
+	}
+
+	public function updatePassword($userId, $currentPassword, $newPassword)
+	{
+		try {
+			$consulta = (BdD::$connection)->prepare('SELECT contrasenya FROM `usuari` WHERE id = :id');
+			$consulta->bindParam(':id', $userId, PDO::PARAM_INT);
+			$consulta->execute();
+			$user = $consulta->fetch(PDO::FETCH_ASSOC);
+
+			if (password_verify($currentPassword, $user['contrasenya'])) {
+				$hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
+				$update = (BdD::$connection)->prepare('UPDATE `usuari` SET contrasenya = :newPassword WHERE id = :id');
+				$update->bindParam(':newPassword', $hashedPassword, PDO::PARAM_STR);
+				$update->bindParam(':id', $userId, PDO::PARAM_INT);
+				return $update->execute();
+			} else {
+				error_log("***Error: Contrasenya actual incorrecta per l'usuari ID: $userId***");
+				return false;
+			}
+		} catch (PDOException $e) {
+			error_log("***Error en actualitzar la contrasenya per l'usuari ID: $userId***: " . $e->getMessage());
 			return false;
 		}
 	}
