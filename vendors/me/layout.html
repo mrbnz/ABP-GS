@@ -49,15 +49,13 @@
             <ul class="navbar-nav me-auto">
                 <li class="nav-item"><a class="nav-link" href="./">Inici</a></li>
                 <li class="nav-item"><a class="nav-link" href="./activitat">Activitats</a></li>
-                <li class="nav-item"><a class="nav-link" href="./admin">Admin</a></li> <!-- Enllaç a l'administrador -->
+                <li class="nav-item"><a class="nav-link" href="./admin">Admin</a></li>
+				<li class="nav-item"><a class="nav-link" href="./usuari">Usuari</a></li> 
             </ul>
             <ul class="navbar-nav ms-auto">
-                {% if session.username %}
                     <li class="nav-item"><a class="nav-link" href="./logout">Tancar sessió</a></li>
-                {% else %}
                     <li class="nav-item"><a class="nav-link" href="./login">Iniciar sessió</a></li>
                     <li class="nav-item"><a class="nav-link" href="./signup">Registrar-se</a></li>
-                {% endif %}
             </ul>
         </div>
     </div>

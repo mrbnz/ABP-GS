@@ -46,11 +46,6 @@ class UsuariManager extends Usuari
 		}
 	}
 
-	public function Login() {
-		// Implementació del mètode Login
-		// Aquí pots afegir la lògica necessària per al login
-	}
-
 	public function registrar($nom_usuari, $email, $contrasenya, $telefon, $dni, $data_naixement, $nom, $cognoms, $es_admin)
 	{
 		try {
@@ -85,25 +80,17 @@ class UsuariManager extends Usuari
 
 	public function getUserById($userId)
 	{
+		if (!is_numeric($userId)) {
+			error_log("***Error***: ID no vàlid.");
+			return null;
+		}
 		try {
-			$consulta = (BdD::$connection)->prepare('SELECT * FROM usuari WHERE id = :id');
-			$consulta->execute(['id' => $userId]);
-			$resultat = $consulta->fetch(PDO::FETCH_ASSOC);
-
-			if ($resultat) {
-				// Convertir les dates a un format adequat si cal
-				if (isset($resultat['data_naixement'])) {
-					$resultat['data_naixement'] = date('Y-m-d', strtotime($resultat['data_naixement']));
-				}
-				if (isset($resultat['data_creacio'])) {
-					$resultat['data_creacio'] = date('Y-m-d H:i:s', strtotime($resultat['data_creacio']));
-				}
-			}
-
-			return $resultat;
+			$consulta = (BdD::$connection)->prepare('SELECT * FROM `usuari` WHERE id = ?');
+			$consulta->execute([$userId]);
+			return $consulta->fetch(PDO::FETCH_ASSOC);
 		} catch (PDOException $e) {
-			echo "***Error***: " . $e->getMessage();
-			return false;
+			error_log("***Error***: " . $e->getMessage());
+			return null;
 		}
 	}
 
@@ -164,6 +151,29 @@ class UsuariManager extends Usuari
 			$consulta = (BdD::$connection)->prepare('SELECT * FROM usuari');
 			$consulta->execute();
 			return $consulta->fetchAll(PDO::FETCH_ASSOC);
+		} catch (PDOException $e) {
+			echo "***Error***: " . $e->getMessage();
+			return false;
+		}
+	}
+
+	public function updatePassword($userId, $currentPassword, $newPassword)
+	{
+		try {
+			$consulta = (BdD::$connection)->prepare('SELECT contrasenya FROM `usuari` WHERE id = :id');
+			$consulta->bindParam(':id', $userId, PDO::PARAM_INT);
+			$consulta->execute();
+			$user = $consulta->fetch(PDO::FETCH_ASSOC);
+
+			if (password_verify($currentPassword, $user['contrasenya'])) {
+				$hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
+				$update = (BdD::$connection)->prepare('UPDATE `usuari` SET contrasenya = :newPassword WHERE id = :id');
+				$update->bindParam(':newPassword', $hashedPassword, PDO::PARAM_STR);
+				$update->bindParam(':id', $userId, PDO::PARAM_INT);
+				return $update->execute();
+			} else {
+				return false;
+			}
 		} catch (PDOException $e) {
 			echo "***Error***: " . $e->getMessage();
 			return false;

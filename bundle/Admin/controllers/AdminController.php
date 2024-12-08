@@ -14,11 +14,21 @@ class AdminController extends Controller
         // Determinar l'acció a realitzar
         $action = $params[0] ?? 'dashboard';
 
+        if (!isset($_SESSION['username'])) {
+            $this->redirect('login');
+            return;
+        }
+
         switch ($action) {
             case 'edit_user':
                 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['userId'])) {
                     $userId = $_POST['userId'];
+                    if (!isset($userId) || !is_numeric($userId)) {
+                        error_log("***Error***: ID no vàlid.");
+                        return null;
+                    }
                     $user = $usuariMng->getUserById($userId);
+                    echo "Usuari trobat: " . $user['nomUsuari'] . "<br>";
                     if ($user) {
                         $this->data['user'] = $user;
                     } else {
@@ -41,9 +51,9 @@ class AdminController extends Controller
 
                     if ($userId && $nomUsuari && $email && $telefon && $dni && $dataNaixement && $nom && $cognoms && $administrador !== null) {
                         if ($usuariMng->updateUser($userId, $nomUsuari, $email, $telefon, $dni, $dataNaixement, $nom, $cognoms, $administrador)) {
-                            echo "Usuari actualitzat correctament.";
+                            error_log("Usuari actualitzat correctament.");
                         } else {
-                            echo "Error en actualitzar l'usuari.";
+                            error_log("Error en actualitzar l'usuari.");
                         }
                     } else {
                         echo "Falten dades!";
@@ -63,7 +73,7 @@ class AdminController extends Controller
                     if ($usuariMng->deleteUser($userId)) {
                         echo "Usuari eliminat correctament.";
                     } else {
-                        echo "Error en eliminar l'usuari.";
+                        error_log("Error en eliminar l'usuari.");
                     }
                 }
                 $this->twig = 'delete_user.html';
