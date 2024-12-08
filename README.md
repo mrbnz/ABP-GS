@@ -53,4 +53,4 @@ Aquest projecte és una aplicació web que gestiona usuaris, activitats i inscri
 1. **Clona el repositori al teu servidor web:**
 
    ```bash
-   git clone <URL-del-repositori>
+   git clone https://github.com/mrbnz/ABP-GS
