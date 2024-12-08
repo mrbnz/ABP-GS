@@ -3,11 +3,12 @@ include('./config/include.php');
 
 class UsuariManager extends Usuari
 {
+	private $data = [];
 
 	public function verificar($nom_usuari, $contrasenya)
 	{
 		if (isset($_SESSION['username'])) {
-			echo "<div class='alert alert-info'>Ja estàs logat com a " . $_SESSION['username'] . ".</div>";
+			error_log("Ja estàs logat com a " . $_SESSION['username'] . ".");
 			return true;
 		} else {
 			try {
@@ -26,11 +27,12 @@ class UsuariManager extends Usuari
 					$_SESSION['is_admin'] = $resultado['administrador']; // Guardar si és administrador
 					return true;
 				} else {
-					echo "<script>alert('Contrasenya incorrecta');</script>";
+					error_log("Error: Contrasenya incorrecta per l'usuari " . $nom_usuari);
+					$this->data['error'] = "Contrasenya incorrecta.";
 					return false;
 				}
 			} catch (PDOException $e) {
-				echo "***Error***: " . $e->getMessage();
+				error_log("***Error***: " . $e->getMessage());
 				return false;
 			}
 		}
@@ -41,7 +43,7 @@ class UsuariManager extends Usuari
 			session_unset();
 			session_destroy();
 		} catch (PDOException $e) {
-			echo "***Error***: " . $e->getMessage();
+			error_log("***Error***: " . $e->getMessage());
 			return false;
 		}
 	}
@@ -66,7 +68,7 @@ class UsuariManager extends Usuari
 
 			return true;
 		} catch (PDOException $e) {
-			echo "***Error***: " . $e->getMessage();
+			error_log("***Error***: " . $e->getMessage());
 			return false;
 		}
 	}
@@ -121,10 +123,10 @@ class UsuariManager extends Usuari
 
 			$consulta->execute();
 
-			echo "Actualització executada correctament.\n";
+			error_log("Perfil actualitzat correctament per l'usuari ID: $userId");
 			return true;
 		} catch (PDOException $e) {
-			echo "***Error***: " . $e->getMessage() . "\n";
+			error_log("***Error en actualitzar el perfil per l'usuari ID: $userId***: " . $e->getMessage());
 			return false;
 		}
 	}
@@ -136,10 +138,10 @@ class UsuariManager extends Usuari
 			$consulta->bindParam(':id', $userId);
 			$consulta->execute();
 
-			echo "Usuari eliminat correctament.\n";
+			error_log("Usuari ID: $userId eliminat correctament.");
 			return true;
 		} catch (PDOException $e) {
-			echo "***Error***: " . $e->getMessage() . "\n";
+			error_log("***Error en eliminar l'usuari ID: $userId***: " . $e->getMessage());
 			return false;
 		}
 	}
@@ -151,7 +153,7 @@ class UsuariManager extends Usuari
 			$consulta->execute();
 			return $consulta->fetchAll(PDO::FETCH_ASSOC);
 		} catch (PDOException $e) {
-			echo "***Error***: " . $e->getMessage();
+			error_log("***Error en obtenir tots els usuaris***: " . $e->getMessage());
 			return false;
 		}
 	}
@@ -171,10 +173,11 @@ class UsuariManager extends Usuari
 				$update->bindParam(':id', $userId, PDO::PARAM_INT);
 				return $update->execute();
 			} else {
+				error_log("***Error: Contrasenya actual incorrecta per l'usuari ID: $userId***");
 				return false;
 			}
 		} catch (PDOException $e) {
-			echo "***Error***: " . $e->getMessage();
+			error_log("***Error en actualitzar la contrasenya per l'usuari ID: $userId***: " . $e->getMessage());
 			return false;
 		}
 	}

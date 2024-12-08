@@ -8,13 +8,19 @@
 </head>
 <body>
     <div class="container my-5">
-        <h1 class="text-center mb-4">Editar Perfil</h1>
         {% if error %}
             <div class="alert alert-danger">{{ error }}</div>
         {% endif %}
         {% if success %}
             <div class="alert alert-success">{{ success }}</div>
         {% endif %}
+        {% if missatge %}
+            <div class="alert alert-info">{{ missatge }}</div>
+        {% endif %}
+        {% if debug %}
+            <div class="alert alert-secondary">{{ debug }}</div>
+        {% endif %}
+        <h1 class="text-center mb-4">Editar Perfil</h1>
         {% if usuari %}
         <form method="POST" action="/ABP-GS/usuari/updateProfile">
             <div class="mb-3">
@@ -47,6 +53,8 @@
             </div>
             <button type="submit" class="btn btn-success">Guardar Canvis</button>
         </form>
+        {% else %}
+            <div class="alert alert-warning">No s'ha trobat informació de l'usuari.</div>
         {% endif %}
     </div>
 </body>

@@ -26,6 +26,7 @@ class AdminController extends Controller
                     $userId = $_POST['userId'];
                     if (!isset($userId) || !is_numeric($userId)) {
                         $this->data['error'] = "ID no vàlid.";
+                        $this->data['debug'] = "ID no vàlid per l'usuari amb ID: $userId";
                         return null;
                     }
                     $user = $usuariMng->getUserById($userId);
@@ -33,6 +34,7 @@ class AdminController extends Controller
                         $this->data['user'] = $user;
                     } else {
                         $this->data['error'] = "Usuari no trobat.";
+                        $this->data['debug'] = "Usuari no trobat amb ID: $userId";
                     }
                 }
                 $this->twig = 'edit_user.html';
@@ -51,9 +53,10 @@ class AdminController extends Controller
 
                     if ($userId && $nomUsuari && $email && $telefon && $dni && $dataNaixement && $nom && $cognoms && $administrador !== null) {
                         if ($usuariMng->updateUser($userId, $nomUsuari, $email, $telefon, $dni, $dataNaixement, $nom, $cognoms, $administrador)) {
-                            error_log("Usuari actualitzat correctament.");
+                            $this->data['success'] = "Usuari actualitzat correctament.";
+                            $this->data['debug'] = "Usuari ID: $userId actualitzat correctament.";
                         } else {
-                            error_log("Error en actualitzar l'usuari.");
+                            $this->data['error'] = "Error en actualitzar l'usuari.";
                         }
                     } else {
                         $this->data['error'] = "Falten dades!";
@@ -77,7 +80,7 @@ class AdminController extends Controller
                         if ($usuariMng->deleteUser($userId)) {
                             $this->data['success'] = "Usuari eliminat correctament.";
                         } else {
-                            error_log("Error en eliminar l'usuari.");
+                            $this->data['error'] = "Error en eliminar l'usuari.";
                         }
                     }
                 }

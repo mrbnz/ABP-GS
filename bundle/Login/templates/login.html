@@ -1,5 +1,17 @@
 <div class="container d-flex align-items-center justify-content-center vh-100">
     <div class="col-md-4">
+        {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+        {% if success %}
+        <div class="alert alert-success">{{ success }}</div>
+        {% endif %}
+        {% if missatge %}
+        <div class="alert alert-info">{{ missatge }}</div>
+        {% endif %}
+        {% if debug %}
+        <div class="alert alert-secondary">{{ debug }}</div>
+        {% endif %}
         <form id="FrmLogin" action="login" method="POST" class="form-signin">
             <h1 class="h3 mb-3 fw-normal text-center">Si us plau, inicia sessió</h1>
             <div class="form-floating mb-3">
@@ -20,16 +32,3 @@
         </form>
     </div>
 </div>
-
-{% if error %}
-    <div class="alert alert-danger">{{ error }}</div>
-{% endif %}
-{% if success %}
-    <div class="alert alert-success">{{ success }}</div>
-{% endif %}
-{% if missatge %}
-    <div class="alert alert-info">{{ missatge }}</div>
-{% endif %}
-{% if debug %}
-    <div class="alert alert-secondary">{{ debug }}</div>
-{% endif %}
