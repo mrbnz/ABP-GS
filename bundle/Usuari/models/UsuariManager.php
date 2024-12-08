@@ -46,12 +46,12 @@ class UsuariManager extends Usuari
 		}
 	}
 
-	public function registrar($nom_usuari, $email, $contrasenya, $telefon, $dni, $data_naixement, $nom, $cognoms)
+	public function registrar($nom_usuari, $email, $contrasenya, $telefon, $dni, $data_naixement, $nom, $cognoms, $es_admin)
 	{
 		try {
 			$consulta = (BdD::$connection)->prepare('
-				INSERT INTO usuari (nom_usuari, email, contrassenya, telefon, dni, data_naixement, nom, cognoms)
-				VALUES (:nom_usuari, :email, :contrasenya, :telefon, :dni, :data_naixement, :nom, :cognoms)
+				INSERT INTO usuari (nom_usuari, email, contrassenya, telefon, dni, data_naixement, nom, cognoms, administrador)
+				VALUES (:nom_usuari, :email, :contrasenya, :telefon, :dni, :data_naixement, :nom, :cognoms, :administrador)
 			');
 
 			$consulta->bindValue(':nom_usuari', $nom_usuari);
@@ -62,6 +62,7 @@ class UsuariManager extends Usuari
 			$consulta->bindValue(':data_naixement', $data_naixement);
 			$consulta->bindValue(':nom', $nom);
 			$consulta->bindValue(':cognoms', $cognoms);
+			$consulta->bindValue(':administrador', $es_admin);
 			$consulta->execute();
 
 			return true;
