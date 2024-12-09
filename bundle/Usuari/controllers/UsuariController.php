@@ -4,11 +4,15 @@ class UsuariController extends Controller
 {
     public function process($params)
     {
-        if (!isset($_SESSION['username'])) {
+
+        //filtre seguretat per si usuari update
+        $this->verificarSessioUsuari();
+
+        if (!$this->EstaLogat()) {
             $this->redirect('login');
             return;
         }
-    
+        
         $action = $params[0] ?? 'panell';
     
         switch ($action) {
@@ -19,20 +23,27 @@ class UsuariController extends Controller
                 $this->updatePassword();
                 break;
             case 'logout':
-                $this->logout(); // Crida al mètode logout del controlador base
+                $this->logout();
                 break;
             case 'editarPerfil':
                 $this->editarPerfil();
+                break;
+            case 'updateProfile':
+                $this->updateProfile();
+                break;
+            case 'canviarContrasenya':
+                $this->mostrarCanviarContrasenya();
                 break;
             default:
                 $this->mostrarPanell($params);
                 break;
         }
     }
+
     private function mostrarPanell($params)
     {
         $usuariMng = new UsuariManager();
-        $userId = $_SESSION['username'] ?? null; // Obtenim l'ID d'usuari de la sessió
+        $userId = $_SESSION['username'] ?? null;
         if ($userId) {
             $usuari = $usuariMng->getUserById($userId);
             $this->data['usuari'] = $usuari;
@@ -46,18 +57,19 @@ class UsuariController extends Controller
     private function veureInfo()
     {
         $usuariMng = new UsuariManager();
-        $userId = $_SESSION['username'] ?? null; // Obtenim l'ID d'usuari de la sessió
-        if ($userId) {
-            $usuari = $usuariMng->getUserById($userId);
+        $username = $_SESSION['username'] ?? null;
+        if ($username) {
+            $usuari = $usuariMng->getUserByUsername($username);
             if ($usuari) {
                 $this->data['usuari'] = $usuari;
                 $this->twig = 'perfil_usuari.html';
+                $this->data['success'] = "Usuari trobat: " . $usuari['nom_usuari'];
             } else {
                 $this->data['error'] = "Usuari no trobat.";
                 $this->twig = 'menu_usuari.html';
             }
         } else {
-            $this->data['error'] = "No s'ha pogut obtenir la informació de l'usuari.";
+            $this->data['error'] = "Usuari no trobat.";
             $this->twig = 'menu_usuari.html';
         }
     }
@@ -65,20 +77,38 @@ class UsuariController extends Controller
     private function updatePassword()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $currentPassword = $_POST['current_password'];
-            $newPassword = $_POST['new_password'];
-            $confirmPassword = $_POST['confirm_password'];
-            // Lógica para actualizar la contraseña
-            // Asegúrate de validar y actualizar la contraseña de manera segura
+            $usuariMng = new UsuariManager();
+            $username = $_SESSION['username'] ?? null;
+            $currentPassword = $_POST['currentPassword'] ?? null;
+            $newPassword = $_POST['newPassword'] ?? null;
+            $confirmPassword = $_POST['confirmPassword'] ?? null;
+
+            if (empty($username) || empty($currentPassword) || empty($newPassword) || empty($confirmPassword)) {
+                $this->data['error'] = "Falten dades!";
+            } elseif ($newPassword !== $confirmPassword) {
+                $this->data['error'] = "Les noves contrasenyes no coincideixen.";
+            } else {
+                $user = $usuariMng->getUserByUsername($username);
+                if ($user && password_verify($currentPassword, $user['contrasenya'])) {
+                    if ($usuariMng->updatePassword($user['id'], $currentPassword, $newPassword)) {
+                        $this->data['success'] = "Contrasenya actualitzada correctament.";
+                    } else {
+                        $this->data['error'] = "Error en actualitzar la contrasenya.";
+                    }
+                } else {
+                    $this->data['error'] = "Contrasenya actual incorrecta.";
+                }
+            }
+            $this->twig = 'canviar_contrasenya.html';
         }
     }
 
     private function editarPerfil()
     {
         $usuariMng = new UsuariManager();
-        $userId = $_SESSION['username'] ?? null; // Obtenim l'ID d'usuari de la sessió
-        if ($userId) {
-            $usuari = $usuariMng->getUserById($userId);
+        $username = $_SESSION['username'] ?? null;
+        if ($username) {
+            $usuari = $usuariMng->getUserByUsername($username);
             if ($usuari) {
                 $this->data['usuari'] = $usuari;
                 $this->twig = 'editar_perfil.html';
@@ -96,7 +126,7 @@ class UsuariController extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $usuariMng = new UsuariManager();
-            $userId = $_SESSION['username'] ?? null;
+            $username = $_SESSION['username'] ?? null;
             $nomUsuari = $_POST['nomUsuari'] ?? null;
             $email = $_POST['email'] ?? null;
             $telefon = $_POST['telefon'] ?? null;
@@ -105,10 +135,10 @@ class UsuariController extends Controller
             $nom = $_POST['nom'] ?? null;
             $cognoms = $_POST['cognoms'] ?? null;
 
-            if ($userId && $nomUsuari && $email && $telefon && $dni && $dataNaixement && $nom && $cognoms) {
-                $novenoArgumento = 'valor_por_defecto'; // Asegúrate de definir el noveno argumento necesario
-                if ($usuariMng->updateUser($userId, $nomUsuari, $email, $telefon, $dni, $dataNaixement, $nom, $cognoms, $novenoArgumento)) {
+            if ($username && $nomUsuari && $email && $telefon && $dni && $dataNaixement && $nom && $cognoms) {
+                if ($usuariMng->updateUserByUsername($username, $nomUsuari, $email, $telefon, $dni, $dataNaixement, $nom, $cognoms)) {
                     $this->data['success'] = "Perfil actualitzat correctament.";
+                    $this->redirect("inici"); // Redirigeix a la pàgina d'inici
                 } else {
                     $this->data['error'] = "Error en actualitzar el perfil.";
                 }
@@ -117,5 +147,10 @@ class UsuariController extends Controller
             }
             $this->editarPerfil();
         }
+    }
+
+    private function mostrarCanviarContrasenya()
+    {
+        $this->twig = 'canviar_contrasenya.html';
     }
 } 

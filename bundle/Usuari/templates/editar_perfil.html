@@ -9,16 +9,10 @@
 <body>
     <div class="container my-5">
         {% if error %}
-            <div class="alert alert-danger">{{ error }}</div>
+        <div class="alert alert-danger">{{ error }}</div>
         {% endif %}
         {% if success %}
-            <div class="alert alert-success">{{ success }}</div>
-        {% endif %}
-        {% if missatge %}
-            <div class="alert alert-info">{{ missatge }}</div>
-        {% endif %}
-        {% if debug %}
-            <div class="alert alert-secondary">{{ debug }}</div>
+        <div class="alert alert-success">{{ success }}</div>
         {% endif %}
         <h1 class="text-center mb-4">Editar Perfil</h1>
         {% if usuari %}
@@ -53,9 +47,8 @@
             </div>
             <button type="submit" class="btn btn-success">Guardar Canvis</button>
         </form>
-        {% else %}
-            <div class="alert alert-warning">No s'ha trobat informació de l'usuari.</div>
         {% endif %}
+        <button onclick="window.history.back()" class="btn btn-secondary">Tornar</button>
     </div>
 </body>
-</html> 
+</html>

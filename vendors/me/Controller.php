@@ -124,6 +124,27 @@ abstract class Controller
 		$this->redirect(""); // Redirigeix a la pàgina d'inici
 	}
 
+	public function verificarSessioUsuari()
+    {
+        if (!isset($_SESSION['username'])) {
+            $this->data['error'] = "Sessió no vàlida. Si us plau, inicia sessió de nou.";
+            $this->redirect('login');
+            return false;
+        }
+
+        $usuariMng = new UsuariManager();
+        $usuari = $usuariMng->getUserByUsername($_SESSION['username']);
+
+        if (!$usuari) {
+            $this->data['error'] = "Usuari no trobat a la base de dades. Si us plau, inicia sessió de nou.";
+            $this->logout();
+            $this->redirect('login');
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * Renders the view
      */

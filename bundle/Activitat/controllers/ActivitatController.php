@@ -4,6 +4,7 @@ class ActivitatController extends Controller
 {
     public function process($params)
     {
+
         $this->mostraActivitats();
         $this->mostraFiltres();
         
