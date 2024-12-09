@@ -52,5 +52,41 @@ class ActivitatManager extends Activitat {
             return null;
         }
     }
+    public function addActivitat($nom, $descripcioBreu, $descripcio, $data, $placesTotals, $preu, $idEspai, $idOrganitzador)
+    {
+        try {
+            $consulta = (BdD::$connection)->prepare('
+                INSERT INTO activitat (nom, descripcio_breu, descripcio, data, places_totals, preu, id_espai)
+                VALUES (:nom, :descripcio_breu, :descripcio, :data, :places_totals, :preu, :id_espai)
+            ');
+            $consulta->bindValue(':nom', $nom, PDO::PARAM_STR);
+            $consulta->bindValue(':descripcio_breu', $descripcioBreu, PDO::PARAM_STR);
+            $consulta->bindValue(':descripcio', $descripcio, PDO::PARAM_STR);
+            $consulta->bindValue(':data', $data, PDO::PARAM_STR);
+            $consulta->bindValue(':places_totals', $placesTotals, PDO::PARAM_INT);
+            $consulta->bindValue(':preu', $preu, PDO::PARAM_STR);
+            $consulta->bindValue(':id_espai', $idEspai, PDO::PARAM_INT);
+            $consulta->execute();
+            return BdD::$connection->lastInsertId();
+        } catch (PDOException $e) {
+            echo "***Error***: " . $e->getMessage();
+            return false;
+        }
+    }
+    public function addActivitatMultimedia($idActivitat, $idMultimedia)
+    {
+        try {
+            $consulta = (BdD::$connection)->prepare('
+                INSERT INTO activitat_multimedia (id_activitat, id_multimedia)
+                VALUES (:id_activitat, :id_multimedia)
+            ');
+            $consulta->bindValue(':id_activitat', $idActivitat, PDO::PARAM_INT);
+            $consulta->bindValue(':id_multimedia', $idMultimedia, PDO::PARAM_INT);
+            return $consulta->execute();
+        } catch (PDOException $e) {
+            echo "***Error***: " . $e->getMessage();
+            return false;
+        }
+    }
 }
 ?>
