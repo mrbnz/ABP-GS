@@ -4,11 +4,13 @@ class ActivitatController extends Controller
 {
     public function process($params)
     {
-
-        $this->mostraActivitats();
-        $this->mostraFiltres();
-        
-        $this->twig = "activitat.html";
+        if (isset($params[0]) && is_numeric($params[0])) {
+            $this->mostraActivitat($params[0]);
+        } else {
+            $this->mostraActivitats();
+            $this->mostraFiltres();
+            $this->twig = "activitat.html";
+        }
     }
 
     public function mostraFiltres (){
@@ -30,6 +32,20 @@ class ActivitatController extends Controller
     }
     public function filtrarActivitats(){
         
+    }
+
+    public function mostraActivitat($id)
+    {
+        $activitatMNG = new ActivitatManager();
+        $activitat = $activitatMNG->getActivitatById($id);
+        
+        if ($activitat) {
+            $this->data['activitat'] = $activitat;
+            $this->twig = "detall_activitat.html"; // Assegura't de tenir aquesta plantilla
+        } else {
+            $this->data['error'] = "Activitat no trobada.";
+            $this->twig = "activitat.html";
+        }
     }
 }
 ?>
