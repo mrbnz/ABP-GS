@@ -22,6 +22,7 @@
         <div class="alert alert-secondary">{{ debug }}</div>
     {% endif %}
         <h1 class="text-center mb-4">Editar Usuari</h1>
+
         <form method="POST" action="/ABP-GS/admin/edit_user" class="mb-4">
             <div class="mb-3">
                 <label for="userId" class="form-label">ID de l'Usuari</label>
@@ -76,6 +77,8 @@
             <button type="submit" class="btn btn-danger">Eliminar Usuari</button>
         </form>
         {% endif %}
+        <button onclick="window.history.back()" class="btn btn-secondary">Tornar</button>
+
     </div>
 </body>
 </html> 

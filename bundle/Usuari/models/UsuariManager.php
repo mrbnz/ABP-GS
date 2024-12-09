@@ -181,4 +181,60 @@ class UsuariManager extends Usuari
 			return false;
 		}
 	}
+
+	public function getUserByUsername($username)
+	{
+		try {
+			$consulta = (BdD::$connection)->prepare('SELECT id, nom_usuari, email, telefon, dni, DATE_FORMAT(data_naixement, "%Y-%m-%d") as data_naixement, nom, cognoms, administrador FROM `usuari` WHERE nom_usuari = ?');
+			$consulta->execute([$username]);
+			return $consulta->fetch(PDO::FETCH_ASSOC);
+		} catch (PDOException $e) {
+			error_log("***Error***: " . $e->getMessage());
+			return null;
+		}
+	}
+
+	public function comprovarUsuariExistent($nom_usuari)
+{
+    try {
+        $consulta = (BdD::$connection)->prepare('SELECT COUNT(*) FROM usuari WHERE nom_usuari = :nom_usuari');
+        $consulta->bindValue(':nom_usuari', $nom_usuari);
+        $consulta->execute();
+        $count = $consulta->fetchColumn();
+        return $count > 0;
+    } catch (PDOException $e) {
+        error_log("***Error***: " . $e->getMessage());
+        return false;
+    }
+}
+
+	public function updateUserByUsername($username, $nomUsuari, $email, $telefon, $dni, $dataNaixement, $nom, $cognoms)
+	{
+		try {
+			$consulta = (BdD::$connection)->prepare('
+				UPDATE usuari SET 
+					nom_usuari = :nom_usuari, 
+					email = :email, 
+					telefon = :telefon, 
+					dni = :dni, 
+					data_naixement = :data_naixement, 
+					nom = :nom, 
+					cognoms = :cognoms 
+				WHERE nom_usuari = :username
+			');
+			return $consulta->execute([
+				':nom_usuari' => $nomUsuari,
+				':email' => $email,
+				':telefon' => $telefon,
+				':dni' => $dni,
+				':data_naixement' => $dataNaixement,
+				':nom' => $nom,
+				':cognoms' => $cognoms,
+				':username' => $username
+			]);
+		} catch (PDOException $e) {
+			error_log("***Error***: " . $e->getMessage());
+			return false;
+		}
+	}
 }

@@ -4,6 +4,7 @@ class SignupController extends Controller
 {
     public function process($params)
     {
+
         $this->data['debug'] = "";
 
         if (isset($_SESSION['username'])) {
@@ -33,6 +34,14 @@ class SignupController extends Controller
                 if ($contrasenya === $confirmar_contrasenya) {
                     $this->data['debug'] .= " Les contrasenyes coincideixen.";
                     $UsuariMng = new UsuariManager();
+
+                    // Validar si el nom d'usuari ja existeix
+                    if ($UsuariMng->comprovarUsuariExistent($nom_usuari)) {
+                        $this->data['error'] = "El nom d'usuari '$nom_usuari' ja està en ús.";
+                        $this->twig = "signup.html";
+                        return;
+                    }
+
                     $hashedPassword = password_hash($contrasenya, PASSWORD_BCRYPT);
                     if ($UsuariMng->registrar($nom_usuari, $email, $hashedPassword, $telefon, $dni, $data_naixement, $nom, $cognoms)) {
                         $this->data['success'] = "Registre exitós per l'usuari: $nom_usuari";
