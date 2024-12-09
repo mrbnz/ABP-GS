@@ -1,82 +1,171 @@
 <!DOCTYPE html>
 <html lang="ca">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Detall de l'Activitat</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body {
-      background-color: #f8f9fa;
-    }
-    .container {
-      background-color: #ffffff; /* Canviat a blanc per simplificar */
-      color: #000; /* Text negre per millor llegibilitat */
-      border-radius: 8px;
-      padding: 20px;
-      max-width: 600px;
-      margin: auto;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .image {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .image img {
-      max-width: 100%;
-      border-radius: 8px;
-    }
-    .details {
-      margin-bottom: 20px;
-    }
-    .details p {
-      margin: 5px 0;
-    }
-    .back-button {
-      margin-top: 20px;
-      text-align: center;
-    }
-    .multimedia img {
-      max-width: 100px;
-      margin: 5px;
-      border-radius: 8px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detall de l'Activitat</title>
+    <!-- Modern Bootstrap 5 and custom styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            /* Day Mode Colors */
+            --day-text-color: #000000;
+            --day-primary-color: #B71C1C;
+            --day-background-color: #FFFFFF;
+            
+            /* Night Mode Colors */
+            --night-text-color: #FFFFFF;
+            --night-primary-color: #590F0D;
+            --night-background-color: #151515;
+            
+            /* Default to Day Mode */
+            --text-color: var(--day-text-color);
+            --primary-color: var(--day-primary-color);
+            --background-color: var(--day-background-color);
+        }
+
+        /* Optional: Add a dark mode toggle */
+        @media (prefers-color-scheme: day) {
+            :root {
+                --text-color: var(--night-text-color);
+                --primary-color: var(--night-primary-color);
+                --background-color: var(--night-background-color);
+            }
+        }
+
+        /* Optional: Manual dark mode class */
+        .dark-mode {
+            --text-color: var(--night-text-color);
+            --primary-color: var(--night-primary-color);
+            --background-color: var(--night-background-color);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        .activity-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+        }
+        .activity-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+        .activity-image {
+            height: 300px;
+            object-fit: cover;
+            width: 100%;
+            transition: transform 0.4s ease;
+        }
+        .activity-image:hover {
+            transform: scale(1.05);
+        }
+        .activity-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .activity-details {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-3px);
+        }
+        .multimedia img {
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+        .multimedia img:hover {
+            transform: scale(1.1);
+        }
+        @media (max-width: 768px) {
+            .activity-card {
+                margin: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container my-5">
-    {% if error %}
-    <div class="alert alert-danger">{{ error }}</div>
-    {% endif %}
-    {% if activitat %}
-    <div class="image">
-      <img src="{{ activitat.imatge }}" alt="Imatge de l'activitat">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="activity-card p-4">
+                    {% if error %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                    {% endif %}
+                    
+                    {% if activitat %}
+                    <div class="text-center mb-4">
+                        <img src="{{ activitat.imatge }}" alt="Imatge de l'activitat" class="activity-image rounded-top">
+                    </div>
+                    
+                    <h1 class="activity-title text-center">{{ activitat.nom }}</h1>
+                    
+                    <div class="activity-details">
+                        <div class="row">
+                            <div class="col-6">
+                                <i class="ri-calendar-line me-2"></i><strong>Data:</strong> {{ activitat.data }}
+                            </div>
+                            <div class="col-6">
+                                <i class="ri-map-pin-line me-2"></i><strong>Espai:</strong> {{ activitat.espai_nom }}
+                            </div>
+                            <div class="col-6">
+                                <i class="ri-user-line me-2"></i><strong>Places:</strong> {{ activitat.places_ocupades }} / {{ activitat.places_totals }}
+                            </div>
+                            <div class="col-6">
+                                <i class="ri-money-euro-circle-line me-2"></i><strong>Preu:</strong> {{ activitat.preu }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3 class="mb-3">Descripció</h3>
+                    <p class="mb-4">{{ activitat.descripcio }}</p>
+                    
+                    {% if activitat.multimedia %}
+                    <h3 class="mb-3">Multimèdia</h3>
+                    <div class="multimedia d-flex justify-content-center gap-3 mb-4">
+                        {% for imatge in activitat.multimedia %}
+                        <img src="{{ imatge }}" alt="Multimèdia" class="img-fluid" style="max-width: 120px;">
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="text-center">
+                        <button class="btn btn-primary btn-lg me-2">
+                            <i class="ri-add-line me-2"></i>Inscriure's
+                        </button>
+                        <button onclick="window.history.back()" class="btn btn-outline-secondary btn-lg">
+                            <i class="ri-arrow-left-line me-2"></i>Tornar
+                        </button>
+                    </div>
+                    
+                    {% else %}
+                    <div class="alert alert-danger text-center">
+                        No s'ha pogut carregar la informació de l'activitat.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
-    <h1>{{ activitat.nom }}</h1>
-    <div class="details">
-      <p><strong>Data:</strong> {{ activitat.data }}</p>
-      <p><strong>Places:</strong> {{ activitat.places_ocupades }} / {{ activitat.places_totals }}</p>
-      <p><strong>Preu:</strong> {{ activitat.preu }}</p>
-      <p><strong>Espai:</strong> {{ activitat.espai_nom }}</p>
-      <p><strong>Ubicació:</strong> {{ activitat.espai_ubicacio }}</p>
-    </div>
-    <h3>Descripció</h3>
-    <p>{{ activitat.descripcio }}</p>
-    <h3>Multimèdia</h3>
-    <div class="multimedia">
-      {% for imatge in activitat.multimedia %}
-      <img src="{{ imatge }}" alt="Multimèdia">
-      {% endfor %}
-    </div>
-    {% else %}
-    <div class="alert alert-danger text-center">No s'ha pogut carregar la informació de l'activitat.</div>
-    {% endif %}
-    <div class="back-button">
-      <button onclick="window.history.back()" class="btn btn-secondary">Tornar</button>
-    </div>
-  </div>
+
+    <!-- Bootstrap and optional JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

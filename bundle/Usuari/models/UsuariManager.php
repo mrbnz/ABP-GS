@@ -237,4 +237,20 @@ class UsuariManager extends Usuari
 			return false;
 		}
 	}
+
+	public function selectAllOrganitzadors()
+	{
+		$resposta = null;
+		try {
+			$consulta = (BdD::$connection)->prepare(
+				'SELECT id, nom FROM usuari WHERE administrador = TRUE' // O qualsevol altra condició per identificar organitzadors
+			);
+			$consulta->execute();
+			$consulta->setFetchMode(PDO::FETCH_ASSOC);
+			$resposta = $consulta->fetchAll();
+		} catch (PDOException $e) {
+			echo "***Error***: " . $e->getMessage();
+		}
+		return $resposta;
+	}
 }

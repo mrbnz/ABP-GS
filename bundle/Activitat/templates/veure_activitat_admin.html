@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>Veure Activitats</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Roboto', sans-serif;
+        }
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .activitat-list {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .activitat-item {
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .activitat-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Llista de totes les activitats</h1>
+        <div class="activitat-list">
+            {% if activitatLlista is not empty %}
+                <ul class="list-group">
+                    {% for activitat in activitatLlista %}
+                        <li class="list-group-item activitat-item">ID: {{ activitat.id }}, Nom: {{ activitat.nom }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="alert alert-warning" role="alert">
+                    No s'han trobat activitats.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
