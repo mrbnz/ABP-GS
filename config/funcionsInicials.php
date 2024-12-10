@@ -7,7 +7,7 @@ define('WEBROOT', str_replace("index.php", "", $_SERVER["SCRIPT_NAME"]));
 define('ESTILS', "styles/style.css");
 define('PGDEFAULT', "");
 define('ERRDEFAULT', "./error.html");
-define('TITOL', "");
+define('TITOL', "GiroAgenda");
 define('DESCRIPCIO', "");
 
 
