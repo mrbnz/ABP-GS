@@ -14,7 +14,10 @@
                 <label for="userId" class="form-label">Selecciona un Usuari</label>
                 <select class="form-control" id="userId" name="userId" required>
                     {% for usuari in llistaUsuaris %}
-                        <option value="{{ usuari.id }}">{{ usuari.nom_usuari }}</option>
+                        <!-- si es admin mostra (admin) al canto -->
+                        <option value="{{ usuari.id }}">
+                            {{ usuari.nom_usuari }}{% if usuari.administrador %} (admin){% endif %}
+                        </option>
                     {% endfor %}
                 </select>
             </div>

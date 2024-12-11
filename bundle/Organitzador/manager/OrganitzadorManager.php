@@ -6,7 +6,7 @@ class OrganitzadorManager
     {
         try {
             $consulta = (BdD::$connection)->prepare('
-                UPDATE activitat SET id_organitzador = :idUsuari WHERE id = :idActivitat
+                UPDATE activitat SET id_usuari = :idUsuari WHERE id = :idActivitat
             ');
             $consulta->bindValue(':idUsuari', $idUsuari, PDO::PARAM_INT);
             $consulta->bindValue(':idActivitat', $idActivitat, PDO::PARAM_INT);

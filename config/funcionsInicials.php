@@ -2,7 +2,7 @@
 
 //valors per defecte
 define('WEBBASE', "http://localhost/ABP-GS/");
-define('DIRBASE', "/var/www/html/exercicism07/ABP-GS"); 
+define('DIRBASE', value: "/var/www/html/exercicism07/ABP-GS"); 
 define('WEBROOT', str_replace("index.php", "", $_SERVER["SCRIPT_NAME"]));
 define('ESTILS', "styles/style.css");
 define('PGDEFAULT', "");
