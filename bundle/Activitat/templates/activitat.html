@@ -7,27 +7,22 @@
 </head>
 <body>
   <h1  style="text-align: center;">ACTIVITATS</h1>
-<div style="text-align: center; margin: 20px;">
+  <div style="width:500px; text-align: center; margin: auto;">
     <input 
       type="text" 
       id="searchInput" 
       placeholder="Busca aquí..." 
-      style="padding: 10px; width: 300px; border: 1px solid #ccc; border-radius: 5px;">
-    <button 
-      onclick="searchFunction()" 
-      style="padding: 10px; border: none; background-color: #ff0000; color: white; border-radius: 5px;">
-      Buscar
-    </button>
+      style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 5px;">
   </div>
-
+<br>
   <div style="display: flex;justify-content: space-between; margin: 0 100px;">
 
     <div>
       <p>TIPUS D'ACTIVITATS</p>
-      <select  style="height: 50px;width: 200px;">
+      <select id="selectTipus" style="height: 50px;width: 200px;">
         <option selected></option>
         {% for tipus in llistaTipus %}
-          <option value="{{tipus.nom}}">{{tipus.nom}}</option>
+          <option value="{{tipus.id}}">{{tipus.nom}}</option>
         {% endfor %}
       </select>
     </div>
@@ -35,10 +30,10 @@
 
     <div class="filtres">
       <p>ESPAI</p>
-      <select  style="height: 50px;width: 200px;">
+      <select id="selectEspai" style="height: 50px;width: 200px;">
         <option selected></option>
         {% for espai in llistaEspai %}
-          <option value="{{espai.nom}}">{{espai.nom}}</option>
+          <option value="{{espai.id}}">{{espai.nom}}</option>
         {% endfor %}
       </select>
     </div>
@@ -46,23 +41,38 @@
 
     <div class="filtres">
       <p>RANG DE DATES</p>
+      <span>Inici : </span> 
       <input type="date">
+      <span>Fi : </span> 
       <input type="date">
     </div>
 
-    <div>PREU</div>
-    
     <div>
+      <p>SELECCIONA EL PREU</p>
+      <span>De : </span>
+      <input type="number" value="0">
+      <span>Fins a : </span>
+      <input type="number" value="0">
+    </div>
+
+    <!--<div>
       <p>PAGINACIÓ</p>
       <select  style="height: 50px;width: 200px;">
       <option selected></option>
-      <option value="8">8 activitats / página</option>
-      <option value="12">12 activitats / página</option>
-      <option value="16">16 activitats / página</option>
+      <option value="4">4 activitats / página</option>
+      <option value="7">7 activitats / página</option>
+      <option value="10">10 activitats / página</option>
     </select>
+  </div>-->
   </div>
+  <br>
+  <div style="margin: auto; width: 500px;">
+    <button id="filtrarButton"
+      style="width:100%;height: 50px; padding: 10px; border: none; background-color: #ff0000; color: white; border-radius: 5px;">
+      Buscar
+    </button>
   </div>
-
+  <br>
     <!-- Llistat d'activitats -->
 <div class="container mt-4">
   {% if error %}
@@ -77,9 +87,10 @@
   {% if debug %}
       <div class="alert alert-secondary">{{ debug }}</div>
   {% endif %}
+
   
-  <h1 class="text-center">Activitats</h1>
-  <ul class="list-group">
+ 
+  <ul id="ulActivitats" class="list-group">
       {% if activitatLlista is not empty %}
           {% for activitat in activitatLlista %}
               <li class="list-group-item d-flex justify-content-between align-items-center" onclick="window.location.href='http://localhost/ABP-GS/activitat/{{ activitat.id }}'">
@@ -96,8 +107,108 @@
   </ul>
 </div>
 <!-- Fi del llistat d'activitats -->
-
 <script>
+
+  const $ = e => document.getElementById(e)
+  $("filtrarButton").addEventListener("click",filterFunction)
+
+  let activitats = [];
+  let activitat = [];
+
+  {% for activitat in activitatLlista %}
+    {% for key,value in activitat %}
+      activitat["{{key}}"] = "{{value}}"
+    {% endfor %}
+    activitats.push(activitat)
+    activitat = []
+  {% endfor %}
+
+
+  let activitatsTipus = [];
+  let activitatTipus = [];
+
+  {% for activitatTipus in llistaActivitatTipus %}
+    {% for key,value in activitatTipus %}
+      activitatTipus["{{key}}"] = "{{value}}"
+    {% endfor %}
+    activitatsTipus.push(activitatTipus)
+    activitatTipus = []
+  {% endfor %}
+
+//console.log(activitats);
+//console.log(activitatsTipus);
+
+  function filtraDades(llista) {
+    console.log(llista)
+    return llista.filter(e => {
+      return (
+          $("selectEspai").value === "" ||
+          $("selectEspai").value === e["id_espai"]
+      )
+          /*&& (
+              $("selectEspai").value === "none" ||
+              $("selectEspai").value === e.color
+          )
+          && (
+              e.first_name.toUpperCase().includes($("nom").value.toUpperCase()) ||
+              e.last_name.toUpperCase().includes($("nom").value.toUpperCase())
+          )*/
+    })
+  }
+  function filterFunction(){
+    mostrarActivitats(filtraDades(activitats))
+  }
+
+  function mostrarActivitats(llistaActivitats){
+    // Referencia al elemento UL.
+const ulActivitats =$("ulActivitats")
+ulActivitats.replaceChildren()
+
+
+if (llistaActivitats.length > 0) {
+  llistaActivitats.forEach(activitat => {
+        // Crear el elemento LI.
+        const li = document.createElement("li")
+        li.className = "list-group-item d-flex justify-content-between align-items-center"
+        li.onclick = () => {
+            window.location.href = `http://localhost/ABP-GS/activitat/${activitat.id}`
+        };
+
+        // Crear el contenedor de texto.
+        const div = document.createElement("div")
+
+        // Crear el título.
+        const h5 = document.createElement("h5")
+        h5.className = "card-title"
+        h5.innerHTML = (activitat.nom)
+        
+
+        // Crear la descripción.
+        const p = document.createElement("p")
+        p.className = "card-text"
+        p.innerHTML = activitat.descripcio_breu
+      
+
+        // Agregar título y descripción al contenedor de texto.
+        div.appendChild(h5)
+        div.appendChild(p)
+
+        // Agregar el contenedor de texto al LI.
+        li.appendChild(div)
+
+        // Agregar el LI al UL.
+        ulActivitats.appendChild(li)
+    });
+} else {
+    // Crear el elemento LI para mostrar que no hay actividades.
+    const li = document.createElement("li")
+    li.className = "list-group-item text-center"
+    li.textContent = "No hi ha activitats disponibles."
+
+    // Agregar el LI al UL.
+    ulActivitats.appendChild(li)
+}
+  }
   
 </script>
 </body>
