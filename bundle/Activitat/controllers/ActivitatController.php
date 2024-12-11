@@ -15,6 +15,8 @@ class ActivitatController extends Controller
         $this->data['llistaTipus'] = $tipusActivitatMNG->selectAll();
         $espaiMNG = new EspaiManager();
         $this->data['llistaEspai'] = $espaiMNG->selectAll();
+        $ActivitatTipusMNG = new ActivitatTipusManager();
+        $this->data['llistaActivitatTipus'] = $ActivitatTipusMNG->selectAll();
     }
 
     public function mostraActivitats(){
