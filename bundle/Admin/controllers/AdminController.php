@@ -100,6 +100,16 @@ class AdminController extends Controller
                 }
                 $this->twig = 'view_users.html';
                 break;
+            case 'llista_activitats_assignar':
+                $activitatMNG = new ActivitatManager();
+                $activitatLlista = $activitatMNG->selectAll();
+                if ($activitatLlista) {
+                    $this->data['activitatLlista'] = $activitatLlista;
+                } else {
+                    $this->data['error'] = "No s'han pogut obtenir les activitats.";
+                }
+                $this->twig = 'llista_activitats_admin.html';
+                break;
             default:
                 $this->twig = 'admin.html';
                 break;

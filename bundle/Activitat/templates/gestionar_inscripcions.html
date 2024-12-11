@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionar Inscripcions</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Gestionar Inscripcions</h1>
+        <h3>Inscrits Actuals</h3>
+        <ul class="list-group mb-4">
+            {% for inscrit in inscrits %}
+                <li class="list-group-item">{{ inscrit.nom_usuari }}</li>
+            {% endfor %}
+        </ul>
+        <form method="POST" action="/ABP-GS/activitat/afegirInscripcio/{{ activitatId }}">
+            <div class="mb-3">
+                <label for="userId" class="form-label">Afegir Usuari</label>
+                <select class="form-control" id="userId" name="userId" required>
+                    {% for usuari in llistaUsuaris %}
+                        <option value="{{ usuari.id }}">{{ usuari.nom_usuari }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Afegir</button>
+        </form>
+    </div>
+</body>
+</html> 

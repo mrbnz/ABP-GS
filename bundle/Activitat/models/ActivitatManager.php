@@ -88,5 +88,26 @@ class ActivitatManager extends Activitat {
             return false;
         }
     }
+    public function updateActivitat($id, $nom, $descripcio, $descripcioBreu, $data, $placesTotals, $preu)
+    {
+        try {
+            $consulta = (BdD::$connection)->prepare('
+                UPDATE activitat 
+                SET nom = :nom, descripcio = :descripcio, descripcio_breu = :descripcio_breu, data = :data, places_totals = :places_totals, preu = :preu
+                WHERE id = :id
+            ');
+            $consulta->bindValue(':id', $id, PDO::PARAM_INT);
+            $consulta->bindValue(':nom', $nom, PDO::PARAM_STR);
+            $consulta->bindValue(':descripcio', $descripcio, PDO::PARAM_STR);
+            $consulta->bindValue(':descripcio_breu', $descripcioBreu, PDO::PARAM_STR);
+            $consulta->bindValue(':data', $data, PDO::PARAM_STR);
+            $consulta->bindValue(':places_totals', $placesTotals, PDO::PARAM_INT);
+            $consulta->bindValue(':preu', $preu, PDO::PARAM_STR);
+            return $consulta->execute();
+        } catch (PDOException $e) {
+            echo "***Error***: " . $e->getMessage();
+            return false;
+        }
+    }
 }
 ?>
