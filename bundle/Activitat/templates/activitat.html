@@ -42,17 +42,17 @@
     <div class="filtres">
       <p>RANG DE DATES</p>
       <span>Inici : </span> 
-      <input type="date">
+      <input id="data1" type="date">
       <span>Fi : </span> 
-      <input type="date">
+      <input id="data2" type="date">
     </div>
 
     <div>
       <p>SELECCIONA EL PREU</p>
       <span>De : </span>
-      <input type="number" value="0">
+      <input id="preu1" type="number" value="0">
       <span>Fins a : </span>
-      <input type="number" value="0">
+      <input id="preu2" type="number" value="0">
     </div>
 
     <!--<div>
@@ -91,19 +91,6 @@
   
  
   <ul id="ulActivitats" class="list-group">
-      {% if activitatLlista is not empty %}
-          {% for activitat in activitatLlista %}
-              <li class="list-group-item d-flex justify-content-between align-items-center" onclick="window.location.href='http://localhost/ABP-GS/activitat/{{ activitat.id }}'">
-                  <div>
-                      <h5 class="card-title">{{ activitat.nom }}</h5>
-                      <p class="card-text">{{ activitat.descripcio_breu }}</p>
-                  </div>
-                  <!-- <a href="http://localhost/ABP-GS/activitat/{{ activitat.id }}" class="btn btn-danger">Veure més</a> -->
-              </li>
-          {% endfor %}
-      {% else %}
-          <li class="list-group-item text-center">No hi ha activitats disponibles.</li>
-      {% endif %}
   </ul>
 </div>
 <!-- Fi del llistat d'activitats -->
@@ -139,20 +126,26 @@
 //console.log(activitatsTipus);
 
   function filtraDades(llista) {
-    console.log(llista)
     return llista.filter(e => {
       return (
-          $("selectEspai").value === "" ||
-          $("selectEspai").value === e["id_espai"]
+        $("selectEspai").value === "" ||
+        $("selectEspai").value === e["id_espai"]
       )
-          /*&& (
-              $("selectEspai").value === "none" ||
-              $("selectEspai").value === e.color
-          )
-          && (
-              e.first_name.toUpperCase().includes($("nom").value.toUpperCase()) ||
-              e.last_name.toUpperCase().includes($("nom").value.toUpperCase())
-          )*/
+      && (
+        $("preu1").value == 0 && $("preu2").value == 0 ||
+        parseFloat($("preu1").value) <= parseFloat(e["preu"]) && parseFloat($("preu2").value) >= parseFloat(e["preu"])
+      )
+      && (
+        $("data1").value == "" && $("data2").value == "" ||
+        new Date($("data1".value)) <= new Date(e["data"]) && new Date($("data2").value) >= new Date(e["data"])
+      )
+      && (
+        $("searchInput").value == "" ||
+        decodeHtml(e["nom"].toUpperCase()).includes($("searchInput").value.toUpperCase())
+        )
+        && (
+        buscarTipusActivitat(e)
+      )
     })
   }
   function filterFunction(){
@@ -160,35 +153,29 @@
   }
 
   function mostrarActivitats(llistaActivitats){
-    // Referencia al elemento UL.
-const ulActivitats =$("ulActivitats")
-ulActivitats.replaceChildren()
-
-
-if (llistaActivitats.length > 0) {
-  llistaActivitats.forEach(activitat => {
-        // Crear el elemento LI.
+    const ulActivitats =$("ulActivitats")
+    ulActivitats.replaceChildren()
+    if (llistaActivitats.length > 0) {
+      llistaActivitats.forEach(activitat => {
         const li = document.createElement("li")
         li.className = "list-group-item d-flex justify-content-between align-items-center"
         li.onclick = () => {
-            window.location.href = `http://localhost/ABP-GS/activitat/${activitat.id}`
+            window.location.href = `activitat/${activitat.id}`
         };
 
-        // Crear el contenedor de texto.
         const div = document.createElement("div")
 
         // Crear el título.
         const h5 = document.createElement("h5")
         h5.className = "card-title"
         h5.innerHTML = (activitat.nom)
-        
+            
 
-        // Crear la descripción.
+         // Crear la descripción.
         const p = document.createElement("p")
         p.className = "card-text"
         p.innerHTML = activitat.descripcio_breu
-      
-
+          
         // Agregar título y descripción al contenedor de texto.
         div.appendChild(h5)
         div.appendChild(p)
@@ -198,17 +185,39 @@ if (llistaActivitats.length > 0) {
 
         // Agregar el LI al UL.
         ulActivitats.appendChild(li)
-    });
-} else {
-    // Crear el elemento LI para mostrar que no hay actividades.
-    const li = document.createElement("li")
-    li.className = "list-group-item text-center"
-    li.textContent = "No hi ha activitats disponibles."
+      });
+    } 
+    else {
+      // Crear el elemento LI para mostrar que no hay actividades.
+      const li = document.createElement("li")
+      li.className = "list-group-item text-center"
+      li.textContent = "No hi ha activitats disponibles."
 
-    // Agregar el LI al UL.
-    ulActivitats.appendChild(li)
-}
+      // Agregar el LI al UL.
+      ulActivitats.appendChild(li)
+    }
   }
+
+  // Ho utilitzem ver descodificar alguns signes com per exemple l'apòstrof
+  function decodeHtml(html) {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+}
+function buscarTipusActivitat(e){
+  let trobat = false
+  activitatsTipus.forEach(actTip => {
+    if($("selectTipus").value == ""){
+      trobat=true
+    }
+    else if(actTip["id_activitat"] == e["id"] && actTip["id_tipus_activitat"]==$("selectTipus").value){
+      trobat=true
+    }
+  });
+   return trobat
+}
+  buscarTipusActivitat()
+  filterFunction()
   
 </script>
 </body>
