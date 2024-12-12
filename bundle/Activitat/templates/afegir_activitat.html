@@ -50,6 +50,15 @@
                             {% endfor %}
                         </select>
                     </div>
+                    <div class="mb-3">
+                        <label for="id_tipus_activitat" class="form-label">Tipus d'Activitat</label>
+                        <select class="form-control" id="id_tipus_activitat" name="id_tipus_activitat" required>
+                            <option value="" selected disabled>Selecciona un tipus d'activitat</option>
+                            {% for tipus in llistaTipusActivitat %}
+                                <option value="{{ tipus.id }}">{{ tipus.nom }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                 </div>
                 <div class="col-md-6">
                     <div class="mb-3">
