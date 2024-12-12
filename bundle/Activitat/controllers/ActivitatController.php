@@ -71,8 +71,14 @@ class ActivitatController extends Controller
             $this->data['error'] = "Activitat no trobada.";
             $this->twig = "activitat.html"; // Mostra la plantilla per defecte
         }
+
+        // Debug de la foto
+        if (isset($activitat['imatge'])) {
+            $this->data['activitat']['imatge'] = $activitat['imatge'];
+        } else {
+            $this->data['activitat']['imatge'] = null;
+        }
     }
-    
     public function afegirActivitat()
     {
         $espaiMNG = new EspaiManager();
@@ -103,7 +109,7 @@ class ActivitatController extends Controller
                     
                     // Processar la foto si s'ha pujat
                     if (isset($_FILES['foto_portada']) && $_FILES['foto_portada']['error'] == UPLOAD_ERR_OK) {
-                        $rutaBase = '/var/www/html/exercicism07/ABP-GS/images/';
+                        $rutaBase = 'images/';
                         if (!is_dir($rutaBase)) {
                             mkdir($rutaBase, 0777, true);
                         }   
@@ -251,5 +257,6 @@ class ActivitatController extends Controller
         //$this->data['validacio_ok'] = "Totes les dades són correctes!";
         return true;
     }
+
 }
 ?>

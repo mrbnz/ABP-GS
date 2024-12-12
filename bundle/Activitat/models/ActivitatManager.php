@@ -32,11 +32,16 @@ class ActivitatManager extends Activitat {
 					e.nom AS espai_nom, 
 					e.ubicacio AS espai_ubicacio, 
 					e.capacitat AS espai_capacitat, 
-					e.descripcio AS espai_descripcio
+					e.descripcio AS espai_descripcio,
+					m.ruta AS imatge
 				FROM 
 					activitat a
 				JOIN 
 					espai e ON a.id_espai = e.id
+				LEFT JOIN 
+					activitat_multimedia am ON a.id = am.id_activitat
+				LEFT JOIN 
+					multimedia m ON am.id_multimedia = m.id
 				WHERE 
 					a.id = :id
             ');

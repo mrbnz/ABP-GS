@@ -109,10 +109,20 @@
                     {% if error %}
                     <div class="alert alert-danger">{{ error }}</div>
                     {% endif %}
-                    
+                    {% if success %}
+                    <div class="alert alert-success">{{ success }}</div>
+                    {% endif %}
+                    {% if errors %}
+                    <div class="alert alert-danger">
+                        {% for error in errors %}
+                            {{ error }}<br>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                     {% if activitat %}
                     <div class="text-center mb-4">
                         <img src="{{ activitat.imatge }}" alt="Imatge de l'activitat" class="activity-image rounded-top">
+                        <!-- <p>{{ activitat.imatge }}</p> -->
                     </div>
                     
                     <h1 class="activity-title text-center">{{ activitat.nom }}</h1>
@@ -154,7 +164,6 @@
                             <i class="ri-arrow-left-line me-2"></i>Tornar
                         </button>
                     </div>
-                    
                     {% else %}
                     <div class="alert alert-danger text-center">
                         No s'ha pogut carregar la informació de l'activitat.
