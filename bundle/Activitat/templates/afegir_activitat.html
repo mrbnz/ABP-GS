@@ -14,6 +14,16 @@
         {% if success %}
         <div class="alert alert-success">{{ success }}</div>
         {% endif %}
+        {% if validacio_ok %}
+        <div class="alert alert-success">{{ validacio_ok }}</div>
+        {% endif %}
+        {% if errors %}
+        <div class="alert alert-danger">
+            {% for error in errors %}
+                {{ error }}<br>
+            {% endfor %}
+        </div>
+        {% endif %}
         <h1 class="text-center mb-4">Afegir Nova Activitat</h1>
         <form method="POST" action="/ABP-GS/activitat/afegirActivitat" enctype="multipart/form-data" novalidate>
             <div class="row">
@@ -66,17 +76,13 @@
                 </div>
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label for="fotos" class="form-label">Afegir Més d'una Foto Multimèdia</label>
-                        <input type="file" class="form-control" id="fotos" name="fotos[]" multiple accept="image/*">
-                    </div>
-                    <div class="mb-3">
-                        <label for="foto_portada" class="form-label">Afegir Foto Portada</label>
+                        <label for="foto_portada" class="form-label">Afegir Foto</label>
                         <input type="file" class="form-control" id="foto_portada" name="foto_portada" required>
                     </div>
                 </div>
             </div>
             <div class="text-center">
-                <button type="submit" class="btn btn-danger">Afegir Activitat</button>
+                <button type="submit" class="btn btn-primary">Afegir Activitat</button>
             </div>
         </form>
     </div>
