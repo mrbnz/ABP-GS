@@ -4,7 +4,21 @@ class ActivitatManager extends Activitat {
 		$resposta = null;
 			try {
 				$consulta = (BdD::$connection)->prepare(
-					'SELECT * FROM `activitat`'
+					'SELECT 
+						a.*,
+						e.nom AS espai_nom,
+						e.ubicacio AS espai_ubicacio,
+						e.capacitat AS espai_capacitat,
+						e.descripcio AS espai_descripcio,
+						m.ruta AS imatge
+					FROM 
+						activitat a
+					LEFT JOIN 
+						espai e ON a.id_espai = e.id
+					LEFT JOIN 
+						activitat_multimedia am ON a.id = am.id_activitat
+					LEFT JOIN 
+						multimedia m ON am.id_multimedia = m.id'
 					);
 				$qFiles = $consulta->execute();
 				if ($qFiles > 0) {
