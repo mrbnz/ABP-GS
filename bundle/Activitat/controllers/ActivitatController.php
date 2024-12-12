@@ -44,6 +44,7 @@ class ActivitatController extends Controller
 
     public function mostraTotesLesActivitats(){
         $activitatMNG = new ActivitatManager();
+
 		$activitatLlista = $activitatMNG->getActivitatsAmbRelacions();
 		
 		if (is_array($activitatLlista)) {
@@ -51,7 +52,9 @@ class ActivitatController extends Controller
 		} else {
 			$this->data['activitatLlista'] = [];
 		}
+
     }
+    
     public function filtrarActivitats(){
         
     }
@@ -68,6 +71,13 @@ class ActivitatController extends Controller
             $this->data['error'] = "Activitat no trobada.";
             $this->twig = "activitat.html"; // Mostra la plantilla per defecte
         }
+
+        // Debug de la foto
+        if (isset($activitat['imatge'])) {
+            $this->data['activitat']['imatge'] = $activitat['imatge'];
+        } else {
+            $this->data['activitat']['imatge'] = null;
+        }
     }
     public function afegirActivitat()
     {
@@ -78,55 +88,53 @@ class ActivitatController extends Controller
         $this->data['llistaOrganitzador'] = $usuariMNG->selectAllOrganitzadors();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $nom = $_POST['nom'] ?? null;
-            $descripcioBreu = $_POST['descripcio_breu'] ?? null;
-            $descripcio = $_POST['descripcio'] ?? null;
-            $data = $_POST['data'] ?? null;
-            $placesTotals = $_POST['places_totals'] ?? null;
-            $preu = $_POST['preu'] ?? null;
-            $idEspai = $_POST['id_espai'] ?? null;
-            $idOrganitzador = $_POST['id_organitzador'] ?? null;
+            // Validació de dades
+            $validacio = $this->validarDadesActivitat($_POST);
+            if ($validacio === true) {
+                // Procés d'afegir activitat
+                $nom = $_POST['nom'] ?? '';
+                $descripcioBreu = $_POST['descripcio_breu'] ?? '';
+                $descripcio = $_POST['descripcio'] ?? '';
+                $data = $_POST['data'] ?? '';
+                $placesTotals = $_POST['places_totals'] ?? '';
+                $preu = $_POST['preu'] ?? '';
+                $idEspai = $_POST['id_espai'] ?? '';
+                $idOrganitzador = $_POST['id_organitzador'] ?? '';
 
-            if ($nom && $descripcioBreu && $descripcio && $data && $placesTotals && $preu && $idEspai && $idOrganitzador) {
                 $activitatMNG = new ActivitatManager();
                 $idActivitat = $activitatMNG->addActivitat($nom, $descripcioBreu, $descripcio, $data, $placesTotals, $preu, $idEspai, $idOrganitzador);
-
+                
                 if ($idActivitat) {
                     $this->data['success'] = "Activitat afegida correctament.";
-
-                    // Processar fotos
-                    $rutaBase = '/var/www/html/exercicism07/ABP-GS/images/';
-                    $multimediaMNG = new MultimediaManager();
-
-                    if (isset($_FILES['fotos']) && $_FILES['fotos']['error'][0] == UPLOAD_ERR_OK) {
-                        $fotos = $_FILES['fotos'];
-                        for ($i = 0; $i < count($fotos['name']); $i++) {
-                            $nomFitxer = basename($fotos['name'][$i]);
-                            $rutaDesti = $rutaBase . $nomFitxer;
-                            if (move_uploaded_file($fotos['tmp_name'][$i], $rutaDesti)) {
-                                $idMultimedia = $multimediaMNG->addMultimedia($rutaDesti, 'imatge', 'Foto de l\'activitat', 'actiu');
-                                $activitatMNG->addActivitatMultimedia($idActivitat, $idMultimedia);
-                            } else {
-                                $this->data['error'] = "Error en pujar la foto: " . $nomFitxer;
-                            }
-                        }
-                    }
-
+                    
+                    // Processar la foto si s'ha pujat
                     if (isset($_FILES['foto_portada']) && $_FILES['foto_portada']['error'] == UPLOAD_ERR_OK) {
-                        $nomFitxerPortada = basename($_FILES['foto_portada']['name']);
-                        $rutaPortada = $rutaBase . $nomFitxerPortada;
+                        $rutaBase = 'images/';
+                        if (!is_dir($rutaBase)) {
+                            mkdir($rutaBase, 0777, true);
+                        }   
+                        
+                        $rutaPortada = $rutaBase . basename($_FILES['foto_portada']['name']);
+                        $multimediaMNG = new MultimediaManager();
+                        
                         if (move_uploaded_file($_FILES['foto_portada']['tmp_name'], $rutaPortada)) {
                             $idMultimedia = $multimediaMNG->addMultimedia($rutaPortada, 'imatge', 'Foto de portada', 'actiu');
-                            $activitatMNG->addActivitatMultimedia($idActivitat, $idMultimedia);
+                            if ($idMultimedia) {
+                                $activitatMNG->addActivitatMultimedia($idActivitat, $idMultimedia);
+                            } else {
+                                $this->data['error'] = "Error al guardar la informació de la imatge.";
+                            }
                         } else {
-                            $this->data['error'] = "Error en pujar la foto de portada.";
+                            $this->data['error'] = "Error al moure el fitxer pujat.";
                         }
+                    } else {
+                        $this->data['error'] = "No s'ha pujat cap foto o hi ha hagut un error en la pujada.";
                     }
                 } else {
-                    $this->data['error'] = "Error en afegir l'activitat.";
+                    $this->data['error'] = "Error al afegir l'activitat.";
                 }
             } else {
-                $this->data['error'] = "Falten dades!";
+                $this->data['error'] = $validacio; // Mostra l'error de validació
             }
         }
 
@@ -228,5 +236,27 @@ class ActivitatController extends Controller
         }
         $this->gestionarInscripcions($idActivitat);
     }
+
+    private function validarDadesActivitat($dades) {
+        $errors = [];
+        
+        if (empty($dades['nom'])) $errors[] = "El nom és obligatori";
+        if (empty($dades['descripcio_breu'])) $errors[] = "La descripció breu és obligatòria";
+        if (empty($dades['descripcio'])) $errors[] = "La descripció és obligatòria";
+        if (empty($dades['data'])) $errors[] = "La data és obligatòria";
+        if (empty($dades['places_totals']) || !is_numeric($dades['places_totals'])) $errors[] = "Les places totals han de ser un número vàlid";
+        if (empty($dades['preu']) || !is_numeric($dades['preu'])) $errors[] = "El preu ha de ser un número vàlid";
+        if (empty($dades['id_espai'])) $errors[] = "Cal seleccionar un espai";
+        //if (empty($dades['id_organitzador'])) $errors[] = "Cal seleccionar un organitzador";
+        
+        if (!empty($errors)) {
+            $this->data['errors'] = $errors;
+            return false;
+        }
+        
+        //$this->data['validacio_ok'] = "Totes les dades són correctes!";
+        return true;
+    }
+
 }
 ?>

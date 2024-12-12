@@ -95,9 +95,12 @@
         {% if activitatLlista is not empty %}
             {% for activitat in activitatLlista %}
                 <li class="list-group-item d-flex justify-content-between align-items-center" onclick='window.location.href="/ABP-GS/activitat/{{ activitat.id }}"'>
-                    <div>
-                        <h5 class="card-title">{{ activitat.nom }}</h5>
-                        <p class="card-text">{{ activitat.descripcio_breu }}</p>
+                    <div class="d-flex align-items-center">
+                        <img src="{{ activitat.imatge }}" alt="img" class="img-fluid rounded" style="max-width: 100px; height: auto; margin-right: 15px;">
+                        <div>
+                            <h5 class="card-title">{{ activitat.nom }}</h5>
+                            <p class="card-text">{{ activitat.descripcio_breu }}</p>
+                        </div>
                     </div>
                 </li>
             {% endfor %}
