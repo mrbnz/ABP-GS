@@ -40,13 +40,11 @@ class ActivitatController extends Controller
         $this->data['llistaTipus'] = $tipusActivitatMNG->selectAll();
         $espaiMNG = new EspaiManager();
         $this->data['llistaEspai'] = $espaiMNG->selectAll();
-        $ActivitatTipusMNG = new ActivitatTipusManager();
-        $this->data['llistaActivitatTipus'] = $ActivitatTipusMNG->selectAll();
     }
 
     public function mostraTotesLesActivitats(){
         $activitatMNG = new ActivitatManager();
-		$activitatLlista = $activitatMNG->selectAll();
+		$activitatLlista = $activitatMNG->getActivitatsAmbRelacions();
 		
 		if (is_array($activitatLlista)) {
 			$this->data['activitatLlista'] = $activitatLlista;

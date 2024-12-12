@@ -7,12 +7,27 @@
 </head>
 <body>
   <h1  style="text-align: center;">ACTIVITATS</h1>
-  <div style="width:500px; text-align: center; margin: auto;">
+  <div style="width:80%; text-align: center; margin: auto;display: flex;">
+
     <input 
       type="text" 
       id="searchInput" 
-      placeholder="Busca aquí..." 
+      placeholder="Cerca el nom aquí..." 
       style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 5px;">
+
+    <span style="margin-left: 40px;margin-right: 5px; white-space: nowrap;">Ordenar per: </span>
+    <select id="orderBy"
+    style="width:100%;height: 50px; padding: 10px; border: none; background-color: #ff0000; color: white; border-radius: 5px;">
+      <option value="tipusD">TIPUS D'ACTIVITATS &darr;</option>
+      <option value="tipusU">TIPUS D'ACTIVITATS &uarr;</option>
+      <option value="espaiD">ESPAI &darr;</option>
+      <option value="espaiU">ESPAI &uarr;</option>
+      <option value="dataD">DATA &darr;</option>
+      <option value="dataU">DATA &uarr;</option>
+      <option value="preuD">PREU &darr;</option>
+      <option value="preuU">PREU &uarr;</option>
+    </select>
+    
   </div>
 <br>
   <div style="display: flex;justify-content: space-between; margin: 0 100px;">
@@ -50,9 +65,9 @@
     <div>
       <p>SELECCIONA EL PREU</p>
       <span>De : </span>
-      <input id="preu1" type="number" value="0">
+      <input id="preu1" type="number" value="">
       <span>Fins a : </span>
-      <input id="preu2" type="number" value="0">
+      <input id="preu2" type="number" value="">
     </div>
 
     <!--<div>
@@ -65,13 +80,26 @@
     </select>
   </div>-->
   </div>
-  <br>
-  <div style="margin: auto; width: 500px;">
+  
+  <div style="display: flex; justify-content:center; margin: auto; width: 80%; ">
+    <button id="clearFiltres"
+      style="margin-left: 40px;width:100%;height: 50px; padding: 10px; border: none; background-color: #ff0000; color: white; border-radius: 5px;">
+      Netejar Filtres
+    </button>
+    <br>
     <button id="filtrarButton"
       style="width:100%;height: 50px; padding: 10px; border: none; background-color: #ff0000; color: white; border-radius: 5px;">
-      Buscar
+      Cercar
+    </button>
+    <br>
+    <button id="clearFiltres"
+      style="margin-left: 40px;width:100%;height: 50px; padding: 10px; border: none; background-color: #ff0000; color: white; border-radius: 5px;">
+     Paginació
     </button>
   </div>
+  
+  
+
   <br>
     <!-- Llistat d'activitats -->
 <div class="container mt-4">
@@ -98,7 +126,18 @@
 
   const $ = e => document.getElementById(e)
   $("filtrarButton").addEventListener("click",filterFunction)
+  $("clearFiltres").addEventListener("click",clearFiltres)
 
+  function clearFiltres(){
+    $("searchInput").value = ""
+    $("selectTipus").selectedIndex = 0
+    $("selectEspai").selectedIndex = 0
+    $("data1").value = ""
+    $("data2").value = ""
+    $("preu1").value = ""
+    $("preu2").value = ""
+    filterFunction()
+  }
   let activitats = [];
   let activitat = [];
 
@@ -110,26 +149,13 @@
     activitat = []
   {% endfor %}
 
-
-  let activitatsTipus = [];
-  let activitatTipus = [];
-
-  {% for activitatTipus in llistaActivitatTipus %}
-    {% for key,value in activitatTipus %}
-      activitatTipus["{{key}}"] = "{{value}}"
-    {% endfor %}
-    activitatsTipus.push(activitatTipus)
-    activitatTipus = []
-  {% endfor %}
-
-//console.log(activitats);
-//console.log(activitatsTipus);
+console.log(activitats)
 
   function filtraDades(llista) {
     return llista.filter(e => {
       return (
-        $("selectEspai").value === "" ||
-        $("selectEspai").value === e["id_espai"]
+        $("selectEspai").value == "" ||
+        $("selectEspai").value == e["id_espai"]
       )
       && (
         $("preu1").value == 0 && $("preu2").value == 0 ||
@@ -144,15 +170,53 @@
         decodeHtml(e["nom"].toUpperCase()).includes($("searchInput").value.toUpperCase())
         )
         && (
-        buscarTipusActivitat(e)
+           $("selectTipus").value == "" ||
+           $("selectTipus").value == e["id_tipus_activitat"]
       )
     })
   }
-  function filterFunction(){
-    mostrarActivitats(filtraDades(activitats))
-  }
 
-  function mostrarActivitats(llistaActivitats){
+  // Ho utilitzem ver descodificar alguns signes com per exemple l'apòstrof
+  function decodeHtml(html) {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+}
+
+function ordenarActivitats(llista){
+  let ordenarPer = $("orderBy").value
+  switch(ordenarPer){
+    case "tipusD":
+
+    llista.sort((a, b) => a["tipus_nom"].localeCompare(b["tipus_nom"], 'ca'));
+      break;
+    case "tipusU":
+    llista.sort((a, b) => b["tipus_nom"].localeCompare(a["tipus_nom"], 'ca'));
+      break;
+    case "espaiD":
+    llista.sort((a, b) => a["espai_nom"].localeCompare(b["espai_nom"], 'ca'));
+      break;
+    case "espaiU":
+    llista.sort((a, b) => b["espai_nom"].localeCompare(a["espai_nom"], 'ca'));
+      break;
+    case "dataD":
+    llista.sort((a, b) => new Date(a["data"]) - new Date(b["data"]));
+      break;
+    case "dataU":
+    llista.sort((a, b) => new Date(b["data"]) - new Date(a["data"]));
+      break; 
+    case "preuD":
+    llista.sort((a, b) => a["preu"] - b["preu"]);
+      break;
+    case "preuU":
+    llista.sort((a, b) => b["preu"] - a["preu"]);
+      break; 
+  }
+  return llista
+}
+
+
+function mostrarActivitats(llistaActivitats){
     const ulActivitats =$("ulActivitats")
     ulActivitats.replaceChildren()
     if (llistaActivitats.length > 0) {
@@ -162,27 +226,20 @@
         li.onclick = () => {
             window.location.href = `activitat/${activitat.id}`
         };
-
         const div = document.createElement("div")
-
         // Crear el título.
         const h5 = document.createElement("h5")
         h5.className = "card-title"
         h5.innerHTML = (activitat.nom)
-            
-
          // Crear la descripción.
         const p = document.createElement("p")
         p.className = "card-text"
         p.innerHTML = activitat.descripcio_breu
-          
         // Agregar título y descripción al contenedor de texto.
         div.appendChild(h5)
         div.appendChild(p)
-
         // Agregar el contenedor de texto al LI.
         li.appendChild(div)
-
         // Agregar el LI al UL.
         ulActivitats.appendChild(li)
       });
@@ -192,31 +249,14 @@
       const li = document.createElement("li")
       li.className = "list-group-item text-center"
       li.textContent = "No hi ha activitats disponibles."
-
       // Agregar el LI al UL.
       ulActivitats.appendChild(li)
     }
   }
 
-  // Ho utilitzem ver descodificar alguns signes com per exemple l'apòstrof
-  function decodeHtml(html) {
-    var txt = document.createElement("textarea");
-    txt.innerHTML = html;
-    return txt.value;
-}
-function buscarTipusActivitat(e){
-  let trobat = false
-  activitatsTipus.forEach(actTip => {
-    if($("selectTipus").value == ""){
-      trobat=true
-    }
-    else if(actTip["id_activitat"] == e["id"] && actTip["id_tipus_activitat"]==$("selectTipus").value){
-      trobat=true
-    }
-  });
-   return trobat
-}
-  buscarTipusActivitat()
+function filterFunction(){
+    mostrarActivitats(filtraDades(ordenarActivitats(activitats)))
+  }
   filterFunction()
   
 </script>
