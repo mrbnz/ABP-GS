@@ -29,12 +29,19 @@ class LoginController extends Controller
 			if ($_POST) {
 				$nom_usuari = isset($_POST["usuari"]) ? trim($_POST["usuari"]) : null;
 				$contrasenya = isset($_POST["contrasenya"]) ? $_POST["contrasenya"] : null;
+				$recorda = isset($_POST["recorda"]) ? $_POST["recorda"] : null;
 
 				if ($nom_usuari && $contrasenya) {
 					$UsuariMng = new UsuariManager();
 					if ($UsuariMng->verificar($nom_usuari, $contrasenya)) {
 						$this->data['success'] = "Login exitós per l'usuari: " . $nom_usuari;
 						$this->login($nom_usuari);
+
+						// Si l'usuari ha marcat "Recorda'm", crea una cookie
+						if ($recorda) {
+							setcookie("session_username", $nom_usuari, time() + (86400 * 30), "/"); // Cookie per 30 dies
+						}
+
 						$this->redirect("");
 					} else {
 						$this->data['error'] = "Login fallit per l'usuari: " . $nom_usuari;

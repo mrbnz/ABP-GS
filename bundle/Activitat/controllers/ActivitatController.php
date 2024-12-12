@@ -81,6 +81,9 @@ class ActivitatController extends Controller
     }
     public function afegirActivitat()
     {
+        $tipusActivitatMNG = new TipusActivitatManager();
+        $this->data['llistaTipusActivitat'] = $tipusActivitatMNG->selectAll();
+
         $espaiMNG = new EspaiManager();
         $this->data['llistaEspai'] = $espaiMNG->selectAll();
 
@@ -99,10 +102,11 @@ class ActivitatController extends Controller
                 $placesTotals = $_POST['places_totals'] ?? '';
                 $preu = $_POST['preu'] ?? '';
                 $idEspai = $_POST['id_espai'] ?? '';
+                $idTipusActivitat = $_POST['id_tipus_activitat'] ?? '';
                 $idOrganitzador = $_POST['id_organitzador'] ?? '';
 
                 $activitatMNG = new ActivitatManager();
-                $idActivitat = $activitatMNG->addActivitat($nom, $descripcioBreu, $descripcio, $data, $placesTotals, $preu, $idEspai, $idOrganitzador);
+                $idActivitat = $activitatMNG->addActivitat($nom, $descripcioBreu, $descripcio, $data, $placesTotals, $preu, $idEspai, $idOrganitzador, $idTipusActivitat);
                 
                 if ($idActivitat) {
                     $this->data['success'] = "Activitat afegida correctament.";
@@ -134,7 +138,7 @@ class ActivitatController extends Controller
                     $this->data['error'] = "Error al afegir l'activitat.";
                 }
             } else {
-                $this->data['error'] = $validacio; // Mostra l'error de validació
+                $this->data['error'] = $validacio;
             }
         }
 
@@ -247,14 +251,12 @@ class ActivitatController extends Controller
         if (empty($dades['places_totals']) || !is_numeric($dades['places_totals'])) $errors[] = "Les places totals han de ser un número vàlid";
         if (empty($dades['preu']) || !is_numeric($dades['preu'])) $errors[] = "El preu ha de ser un número vàlid";
         if (empty($dades['id_espai'])) $errors[] = "Cal seleccionar un espai";
-        //if (empty($dades['id_organitzador'])) $errors[] = "Cal seleccionar un organitzador";
+        if (empty($dades['id_tipus_activitat'])) $errors[] = "Cal seleccionar un tipus d'activitat";
         
         if (!empty($errors)) {
-            $this->data['errors'] = $errors;
-            return false;
+            return implode("<br>", $errors);
         }
         
-        //$this->data['validacio_ok'] = "Totes les dades són correctes!";
         return true;
     }
 
