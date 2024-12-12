@@ -42,7 +42,8 @@ class ActivitatManager extends Activitat {
 					a.data, 
 					a.places_totals, 
 					a.places_ocupades, 
-					a.preu, 
+					a.preu,
+                    a.id_tipus_activitat 
 					e.nom AS espai_nom, 
 					e.ubicacio AS espai_ubicacio, 
 					e.capacitat AS espai_capacitat, 
@@ -128,5 +129,48 @@ class ActivitatManager extends Activitat {
             return false;
         }
     }
+    public function getActivitatsAmbRelacions()
+{
+    try {
+        $consulta = (BdD::$connection)->prepare('
+            SELECT 
+                a.id, 
+                a.nom, 
+                a.descripcio_breu, 
+                a.descripcio, 
+                a.data, 
+                a.places_totals, 
+                a.places_ocupades, 
+                a.preu,
+                a.id_tipus_activitat,
+                a.id_espai,
+                t.nom AS tipus_nom,
+                e.nom AS espai_nom, 
+                e.ubicacio AS espai_ubicacio, 
+                e.capacitat AS espai_capacitat, 
+                e.descripcio AS espai_descripcio
+            FROM 
+                activitat a
+            JOIN 
+                espai e ON a.id_espai = e.id
+            JOIN 
+                tipus_activitat t ON a.id_tipus_activitat = t.id
+        ');
+        
+        
+        $consulta->execute();
+        $resultat = $consulta->fetchAll(PDO::FETCH_ASSOC);  
+        
+        if (!$resultat) {
+            echo "***Debug***: No s'han trobat activitats.";
+        }
+        
+        return $resultat;
+    } catch (PDOException $e) {
+        echo "***Error***: " . $e->getMessage();
+        return null;
+    }
+}
+
 }
 ?>

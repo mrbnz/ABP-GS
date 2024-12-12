@@ -4,6 +4,7 @@ class Activitat
     // Camps de la base de dades
     private $id;
     private $idEspai;
+    private $idTipusActivitat;
     private $nom;
     private $descripcioBreu;
     private $descripcio;
@@ -18,6 +19,7 @@ class Activitat
         if ($valors === null) {
             $this->id = null;
             $this->idEspai = null;
+            $this->idTipusActivitat = null;
             $this->nom = null;
             $this->descripcioBreu = null;
             $this->descripcio = null;
@@ -28,6 +30,7 @@ class Activitat
         } else if (is_array($valors)) {
             if (isset($valors["id"]))$this->id = $valors["id"];
             if (isset($valors["idEspai"]))$this->idEspai = $valors["idEspai"] ?? null;
+            if (isset($valors["idTipusActivitat"]))$this->idTipusActivitat = $valors["idTipusActivitat"] ?? null;
             if (isset($valors["nom"]))$this->nom = $valors["nom"] ?? null;
             if (isset($valors["descripcioBreu"]))$this->descripcioBreu = $valors["descripcioBreu"] ?? null;
             if (isset($valors["descripcio"]))$this->descripcio = $valors["descripcio"] ?? null;
@@ -57,6 +60,16 @@ class Activitat
     public function setIdEspai($idEspai)
     {
         if (isset($idEspai)) $this->idEspai = $idEspai;
+    }
+
+    public function getIdTipusActivitat()
+    {
+        return $this->idTipusActivitat;
+    }
+
+    public function setIdTipusActivitat($idEspai)
+    {
+        if (isset($idTipusActivitat)) $this->idTipusActivitat = $idTipusActivitat;
     }
 
     public function getNom()
