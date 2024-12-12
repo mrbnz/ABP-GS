@@ -18,7 +18,7 @@
         style="width: 300px;">
 
       <span class="align-self-center mr-2">Ordenar per:</span>
-      <select id="orderBy" class="form-control" style="width: 200px;">
+      <select id="orderBy" class="form-control" style="width: 200px;margin-right: 10px;">
         <option value="tipusD">TIPUS D'ACTIVITATS &darr;</option>
         <option value="tipusU">TIPUS D'ACTIVITATS &uarr;</option>
         <option value="espaiD">ESPAI &darr;</option>
@@ -28,6 +28,14 @@
         <option value="preuD">PREU &darr;</option>
         <option value="preuU">PREU &uarr;</option>
       </select>
+
+      <span style="white-space: nowrap;" class="align-self-center mr-2">Paginació:</span>
+      <input 
+        type="number" 
+        id="paginationInput" 
+        placeholder="Activitats per pàgina ..." 
+        class="form-control mr-2" 
+        style="width: 300px;">
     </div>
 
     <div class="row mb-3">
@@ -66,7 +74,7 @@
         <div class="d-flex">
           <span class="align-self-center">De:</span>
           <input id="preu1" type="number" class="form-control mx-2">
-          <span class="align-self-center">Fins a:</span>
+          <span style="white-space: nowrap;" class="align-self-center">Fins a:</span>
           <input id="preu2" type="number" class="form-control mx-2">
         </div>
       </div>
@@ -75,7 +83,6 @@
     <div class="d-flex justify-content-center mb-3">
       <button id="clearFiltres" class="btn btn-danger mx-2">Netejar Filtres</button>
       <button id="filtrarButton" class="btn btn-danger mx-2">Cercar</button>
-      <button id="clearFiltres" class="btn btn-danger mx-2">Paginació</button>
     </div>
 
     <div class="container mt-4">
@@ -94,12 +101,51 @@
       <ul id="ulActivitats" class="list-group">
       </ul>
     </div>
+    <div id="pagination-controls" class="d-flex justify-content-center mt-3"></div>
+
   </div>
 
 <script>
+
+let currentPage = 1; // Página actual
+let itemsPerPage = 5; // Elementos por página (puedes ajustar esto dinámicamente)
+
+function paginate(items, page, itemsPerPage) {
+    const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = page * itemsPerPage;
+    return items.slice(startIndex, endIndex);
+}
+
+function createPaginationControls(totalItems, itemsPerPage) {
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const paginationContainer = document.getElementById('pagination-controls');
+    paginationContainer.innerHTML = ''; // Limpia los controles previos
+
+    for (let i = 1; i <= totalPages; i++) {
+        const button = document.createElement('button');
+        button.textContent = i;
+        button.className = 'btn btn-danger mx-1';
+        button.disabled = i === currentPage; // Desactiva el botón de la página actual
+        button.onclick = () => {
+            currentPage = i;
+            filterFunction();
+        };
+        paginationContainer.appendChild(button);
+    }
+}
+
+
+
+
   const $ = e => document.getElementById(e)
   $("filtrarButton").addEventListener("click",filterFunction)
   $("clearFiltres").addEventListener("click",clearFiltres)
+
+  $('paginationInput').addEventListener('change', (e) => {
+    itemsPerPage = parseInt(e.target.value, 10) || 5; // Valor predeterminado: 5
+    currentPage = 1; // Reinicia a la primera página
+    filterFunction();
+});
 
   function clearFiltres(){
     $("searchInput").value = ""
@@ -230,9 +276,12 @@ function mostrarActivitats(llistaActivitats){
     }
   }
 
-function filterFunction(){
-    mostrarActivitats(filtraDades(ordenarActivitats(activitats)))
-  }
+  function filterFunction() {
+    const filteredData = filtraDades(ordenarActivitats(activitats));
+    const paginatedData = paginate(filteredData, currentPage, itemsPerPage);
+    mostrarActivitats(paginatedData);
+    createPaginationControls(filteredData.length, itemsPerPage); // Actualiza controles
+}
   filterFunction()
 </script>
 </body>
