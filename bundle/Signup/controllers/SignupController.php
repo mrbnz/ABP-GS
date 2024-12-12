@@ -27,7 +27,7 @@ class SignupController extends Controller
             $this->data['debug'] .= " Totes les dades són presents.";
             $this->data['debug'] .= " Les contrasenyes coincideixen.";
 
-            $this->data['debug'] = "Dades rebudes: Usuari: $nom_usuari, Email: $email, Telèfon: $telefon, DNI: $dni, Nom: $nom, Cognoms: $cognoms, Data de naixement: $data_naixement";
+            $this->data['debug'] = "Dades rebudes: Usuari: $nom_usuari, Email: $email, Telèfon: $telefon, DNI: $dni, Nom: $nom, Cognoms: $cognoms, Data de naixement: $data_naixement\n";
 
             if ($nom_usuari && $email && $contrasenya && $confirmar_contrasenya && $telefon && $dni && $nom && $cognoms && $data_naixement) {
                 $this->data['debug'] .= " Totes les dades són presents.";
