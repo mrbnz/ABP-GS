@@ -45,8 +45,7 @@ class SignupController extends Controller
                     $hashedPassword = password_hash($contrasenya, PASSWORD_BCRYPT);
                     if ($UsuariMng->registrar($nom_usuari, $email, $hashedPassword, $telefon, $dni, $data_naixement, $nom, $cognoms)) {
                         $this->data['success'] = "Registre exitós per l'usuari: $nom_usuari";
-                        $this->login($nom_usuari);
-                        $this->redirect("");
+                        $this->redirect("login");
                     } else {
                         $this->data['error'] = "Error en el registre per l'usuari: $nom_usuari";
                         $this->twig = "signup.html";

@@ -1,129 +1,102 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ca">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Activitats</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-  <h1  style="text-align: center;">ACTIVITATS</h1>
-  <div style="width:80%; text-align: center; margin: auto;display: flex;">
+  <div class="container mt-4">
+    <h1 class="text-center">ACTIVITATS</h1>
+    <div class="d-flex justify-content-center mb-3">
+      <input 
+        type="text" 
+        id="searchInput" 
+        placeholder="Cerca el nom aquí..." 
+        class="form-control mr-2" 
+        style="width: 300px;">
 
-    <input 
-      type="text" 
-      id="searchInput" 
-      placeholder="Cerca el nom aquí..." 
-      style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 5px;">
-
-    <span style="margin-left: 40px;margin-right: 5px; white-space: nowrap;">Ordenar per: </span>
-    <select id="orderBy"
-    style="width:100%;height: 50px; padding: 10px; border: none; background-color: #ff0000; color: white; border-radius: 5px;">
-      <option value="tipusD">TIPUS D'ACTIVITATS &darr;</option>
-      <option value="tipusU">TIPUS D'ACTIVITATS &uarr;</option>
-      <option value="espaiD">ESPAI &darr;</option>
-      <option value="espaiU">ESPAI &uarr;</option>
-      <option value="dataD">DATA &darr;</option>
-      <option value="dataU">DATA &uarr;</option>
-      <option value="preuD">PREU &darr;</option>
-      <option value="preuU">PREU &uarr;</option>
-    </select>
-    
-  </div>
-<br>
-  <div style="display: flex;justify-content: space-between; margin: 0 100px;">
-
-    <div>
-      <p>TIPUS D'ACTIVITATS</p>
-      <select id="selectTipus" style="height: 50px;width: 200px;">
-        <option selected></option>
-        {% for tipus in llistaTipus %}
-          <option value="{{tipus.id}}">{{tipus.nom}}</option>
-        {% endfor %}
+      <span class="align-self-center mr-2">Ordenar per:</span>
+      <select id="orderBy" class="form-control" style="width: 200px;">
+        <option value="tipusD">TIPUS D'ACTIVITATS &darr;</option>
+        <option value="tipusU">TIPUS D'ACTIVITATS &uarr;</option>
+        <option value="espaiD">ESPAI &darr;</option>
+        <option value="espaiU">ESPAI &uarr;</option>
+        <option value="dataD">DATA &darr;</option>
+        <option value="dataU">DATA &uarr;</option>
+        <option value="preuD">PREU &darr;</option>
+        <option value="preuU">PREU &uarr;</option>
       </select>
     </div>
 
+    <div class="row mb-3">
+      <div class="col">
+        <label>TIPUS D'ACTIVITATS</label>
+        <select id="selectTipus" class="form-control">
+          <option selected></option>
+          {% for tipus in llistaTipus %}
+            <option value="{{tipus.id}}">{{tipus.nom}}</option>
+          {% endfor %}
+        </select>
+      </div>
 
-    <div class="filtres">
-      <p>ESPAI</p>
-      <select id="selectEspai" style="height: 50px;width: 200px;">
-        <option selected></option>
-        {% for espai in llistaEspai %}
-          <option value="{{espai.id}}">{{espai.nom}}</option>
-        {% endfor %}
-      </select>
+      <div class="col">
+        <label>ESPAI</label>
+        <select id="selectEspai" class="form-control">
+          <option selected></option>
+          {% for espai in llistaEspai %}
+            <option value="{{espai.id}}">{{espai.nom}}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col">
+        <label>RANG DE DATES</label>
+        <div class="d-flex">
+          <span class="align-self-center">Inici:</span>
+          <input id="data1" type="date" class="form-control mx-2">
+          <span class="align-self-center">Fi:</span>
+          <input id="data2" type="date" class="form-control mx-2">
+        </div>
+      </div>
+
+      <div class="col">
+        <label>SELECCIONA EL PREU</label>
+        <div class="d-flex">
+          <span class="align-self-center">De:</span>
+          <input id="preu1" type="number" class="form-control mx-2">
+          <span class="align-self-center">Fins a:</span>
+          <input id="preu2" type="number" class="form-control mx-2">
+        </div>
+      </div>
     </div>
 
-
-    <div class="filtres">
-      <p>RANG DE DATES</p>
-      <span>Inici : </span> 
-      <input id="data1" type="date">
-      <span>Fi : </span> 
-      <input id="data2" type="date">
+    <div class="d-flex justify-content-center mb-3">
+      <button id="clearFiltres" class="btn btn-danger mx-2">Netejar Filtres</button>
+      <button id="filtrarButton" class="btn btn-danger mx-2">Cercar</button>
+      <button id="clearFiltres" class="btn btn-danger mx-2">Paginació</button>
     </div>
 
-    <div>
-      <p>SELECCIONA EL PREU</p>
-      <span>De : </span>
-      <input id="preu1" type="number" value="">
-      <span>Fins a : </span>
-      <input id="preu2" type="number" value="">
+    <div class="container mt-4">
+      {% if error %}
+          <div class="alert alert-danger">{{ error }}</div>
+      {% endif %}
+      {% if success %}
+          <div class="alert alert-success">{{ success }}</div>
+      {% endif %}
+      {% if missatge %}
+          <div class="alert alert-info">{{ missatge }}</div>
+      {% endif %}
+      {% if debug %}
+          <div class="alert alert-secondary">{{ debug }}</div>
+      {% endif %}
+      <ul id="ulActivitats" class="list-group">
+      </ul>
     </div>
-
-    <!--<div>
-      <p>PAGINACIÓ</p>
-      <select  style="height: 50px;width: 200px;">
-      <option selected></option>
-      <option value="4">4 activitats / página</option>
-      <option value="7">7 activitats / página</option>
-      <option value="10">10 activitats / página</option>
-    </select>
-  </div>-->
   </div>
-  
-  <div style="display: flex; justify-content:center; margin: auto; width: 80%; ">
-    <button id="clearFiltres"
-      style="margin-left: 40px;width:100%;height: 50px; padding: 10px; border: none; background-color: #ff0000; color: white; border-radius: 5px;">
-      Netejar Filtres
-    </button>
-    <br>
-    <button id="filtrarButton"
-      style="width:100%;height: 50px; padding: 10px; border: none; background-color: #ff0000; color: white; border-radius: 5px;">
-      Cercar
-    </button>
-    <br>
-    <button id="clearFiltres"
-      style="margin-left: 40px;width:100%;height: 50px; padding: 10px; border: none; background-color: #ff0000; color: white; border-radius: 5px;">
-     Paginació
-    </button>
-  </div>
-  
-  
 
-  <br>
-    <!-- Llistat d'activitats -->
-<div class="container mt-4">
-  {% if error %}
-      <div class="alert alert-danger">{{ error }}</div>
-  {% endif %}
-  {% if success %}
-      <div class="alert alert-success">{{ success }}</div>
-  {% endif %}
-  {% if missatge %}
-      <div class="alert alert-info">{{ missatge }}</div>
-  {% endif %}
-  {% if debug %}
-      <div class="alert alert-secondary">{{ debug }}</div>
-  {% endif %}
-
-  
- 
-  <ul id="ulActivitats" class="list-group">
-  </ul>
-</div>
-<!-- Fi del llistat d'activitats -->
 <script>
-
   const $ = e => document.getElementById(e)
   $("filtrarButton").addEventListener("click",filterFunction)
   $("clearFiltres").addEventListener("click",clearFiltres)
@@ -176,7 +149,6 @@ console.log(activitats)
     })
   }
 
-  // Ho utilitzem ver descodificar alguns signes com per exemple l'apòstrof
   function decodeHtml(html) {
     var txt = document.createElement("textarea");
     txt.innerHTML = html;
@@ -187,7 +159,6 @@ function ordenarActivitats(llista){
   let ordenarPer = $("orderBy").value
   switch(ordenarPer){
     case "tipusD":
-
     llista.sort((a, b) => a["tipus_nom"].localeCompare(b["tipus_nom"], 'ca'));
       break;
     case "tipusU":
@@ -215,7 +186,6 @@ function ordenarActivitats(llista){
   return llista
 }
 
-
 function mostrarActivitats(llistaActivitats){
     const ulActivitats =$("ulActivitats")
     ulActivitats.replaceChildren()
@@ -227,29 +197,22 @@ function mostrarActivitats(llistaActivitats){
             window.location.href = `activitat/${activitat.id}`
         };
         const div = document.createElement("div")
-        // Crear el título.
         const h5 = document.createElement("h5")
         h5.className = "card-title"
         h5.innerHTML = (activitat.nom)
-         // Crear la descripción.
         const p = document.createElement("p")
         p.className = "card-text"
         p.innerHTML = activitat.descripcio_breu
-        // Agregar título y descripción al contenedor de texto.
         div.appendChild(h5)
         div.appendChild(p)
-        // Agregar el contenedor de texto al LI.
         li.appendChild(div)
-        // Agregar el LI al UL.
         ulActivitats.appendChild(li)
       });
     } 
     else {
-      // Crear el elemento LI para mostrar que no hay actividades.
       const li = document.createElement("li")
       li.className = "list-group-item text-center"
       li.textContent = "No hi ha activitats disponibles."
-      // Agregar el LI al UL.
       ulActivitats.appendChild(li)
     }
   }
@@ -258,7 +221,6 @@ function filterFunction(){
     mostrarActivitats(filtraDades(ordenarActivitats(activitats)))
   }
   filterFunction()
-  
 </script>
 </body>
 </html>
