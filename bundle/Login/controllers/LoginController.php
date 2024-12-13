@@ -42,7 +42,13 @@ class LoginController extends Controller
 							setcookie("session_username", $nom_usuari, time() + (86400 * 30), "/"); // Cookie per 30 dies
 						}
 
-						$this->redirect("");
+						// Recupera la cookie i verifica si coincideix amb el nom d'usuari
+						if (isset($_COOKIE["session_username"]) && $_COOKIE["session_username"] == $nom_usuari) {
+							$this->redirect("login");
+						} else {
+							$this->redirect("");
+						}
+
 					} else {
 						$this->data['error'] = "Login fallit per l'usuari: " . $nom_usuari;
 						$this->twig = "login.html";

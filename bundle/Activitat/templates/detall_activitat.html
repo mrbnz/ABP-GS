@@ -9,38 +9,12 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <style>
         :root {
-            /* Day Mode Colors */
-            --day-text-color: #000000;
-            --day-primary-color: #B71C1C;
-            --day-background-color: #FFFFFF;
-            
-            /* Night Mode Colors */
-            --night-text-color: #FFFFFF;
-            --night-primary-color: #590F0D;
-            --night-background-color: #151515;
-            
-            /* Default to Day Mode */
-            --text-color: var(--day-text-color);
-            --primary-color: var(--day-primary-color);
-            --background-color: var(--day-background-color);
+            /* Colores Predeterminados */
+            --text-color: #000000;
+            --primary-color: #B71C1C;
+            --background-color: #FFFFFF;
         }
 
-        /* Optional: Add a dark mode toggle */
-        @media (prefers-color-scheme: day) {
-            :root {
-                --text-color: var(--night-text-color);
-                --primary-color: var(--night-primary-color);
-                --background-color: var(--night-background-color);
-            }
-        }
-
-        /* Optional: Manual dark mode class */
-        .dark-mode {
-            --text-color: var(--night-text-color);
-            --primary-color: var(--night-primary-color);
-            --background-color: var(--night-background-color);
-        }
-        
         body {
             background-color: var(--background-color);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -48,7 +22,7 @@
             line-height: 1.6;
         }
         .activity-card {
-            background: white;
+            background: #B71C1C;
             border-radius: 12px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -68,7 +42,7 @@
             transform: scale(1.05);
         }
         .activity-title {
-            color: var(--primary-color);
+            color: #FFFFFF; /* Texto blanco */
             font-weight: 700;
             margin-bottom: 20px;
         }
@@ -144,17 +118,9 @@
                         </div>
                     </div>
                     
-                    <h3 class="mb-3">Descripció</h3>
-                    <p class="mb-4">{{ activitat.descripcio }}</p>
+                    <h3 class="mb-3 text-white">Descripció</h3>
+                    <p class="mb-4 text-white">{{ activitat.descripcio }}</p>
                     
-                    {% if activitat.multimedia %}
-                    <h3 class="mb-3">Multimèdia</h3>
-                    <div class="multimedia d-flex justify-content-center gap-3 mb-4">
-                        {% for imatge in activitat.multimedia %}
-                        <img src="{{ imatge }}" alt="Multimèdia" class="img-fluid" style="max-width: 120px;">
-                        {% endfor %}
-                    </div>
-                    {% endif %}
                     
                     <div class="text-center">
                         <button class="btn btn-primary btn-lg me-2">
