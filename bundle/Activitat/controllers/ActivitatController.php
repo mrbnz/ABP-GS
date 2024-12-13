@@ -27,6 +27,9 @@ class ActivitatController extends Controller
             case isset($params[0]) && $params[0] === 'gestionarInscripcions' && isset($params[1]) && is_numeric($params[1]):
                 $this->gestionarInscripcions($params[1]);
                 break;
+            case isset($params[0]) && isset($params[1])  && $params[0] === 'inscripcio' && isset($params[1]) && is_numeric($params[1]):
+                $this->ferDesferInscripcio($params[1]);
+                break;
             default:    
                 $this->mostraTotesLesActivitats();
                 $this->mostraFiltres();
@@ -44,7 +47,6 @@ class ActivitatController extends Controller
 
     public function mostraTotesLesActivitats(){
         $activitatMNG = new ActivitatManager();
-
 		$activitatLlista = $activitatMNG->getActivitatsAmbRelacions();
 		
 		if (is_array($activitatLlista)) {
@@ -54,19 +56,73 @@ class ActivitatController extends Controller
 		}
 
     }
-    
-    public function filtrarActivitats(){
-        
+
+    public function ferDesferInscripcio($idActivitat){        
+        if (isset($_SESSION['username'])) {
+            $usuariMNG = new UsuariManager();
+            $usuariInscripcio = $usuariMNG->getUserByUsername($_SESSION['username']);
+
+            $inscripcioMNG = new InscripcioManager();
+            $inscripcio = $inscripcioMNG->getInscriptionForUser($usuariInscripcio["id"], $idActivitat);
+            print_r($usuariInscripcio["id"]);
+            print_r($idActivitat);
+            if($inscripcio){
+                if($inscripcio["estat"]=="cancel·lada"){
+                    $inscripcioMNG->updateInscripcioEstat($usuariInscripcio["id"], $idActivitat, "confirmada");
+                }
+                else if($inscripcio["estat"]=="confirmada"){
+                    $inscripcioMNG->updateInscripcioEstat($usuariInscripcio["id"], $idActivitat, "cancel·lada");
+                }
+                else{
+                    print_r("Else hola");
+                }
+                //Podriem posar més estats en cas de necessitar-los
+            }
+            else{
+                $inscripcioMNG-> afegirInscripcio($usuariInscripcio["id"],$idActivitat,"confirmada");
+            }
+
+            $this->mostraUnaActivitat($idActivitat);
+        }
     }
 
     public function mostraUnaActivitat($id)
     {
         $activitatMNG = new ActivitatManager();
         $activitat = $activitatMNG->getActivitatById($id);
-        
         if ($activitat) {
+
             $this->data['activitat'] = $activitat;
-            $this->twig = "detall_activitat.html"; // Assegura't de tenir aquesta plantilla
+            $today = new DateTime();
+            $data = new DateTime($activitat["data"]);
+            //Si la data ja ha passat no et pots inscriure
+            if($today>$data){
+                $this->data['mostrar'] = false;
+            }
+            else {
+                $this->data['mostrar'] = true;
+            }
+
+            if (isset($_SESSION['username'])) {
+                $usuariMNG = new UsuariManager();
+                $usuariInscripcio = $usuariMNG->getUserByUsername($_SESSION['username']);
+                $inscripcioMNG = new InscripcioManager();
+                $inscripcio = $inscripcioMNG->getInscriptionForUser($usuariInscripcio["id"], $id);
+                print_r($inscripcio["estat"]);
+                if($inscripcio["estat"]=="confirmada"){
+                    $this->data['mostrarInscrit'] = true;
+                }
+                else{
+                    $this->data['mostrarInscrit'] = false;
+                }
+            }
+            else {
+                $this->data['mostrar'] = false;
+            }
+            
+
+
+            $this->twig = "detall_activitat.html";
         } else {
             $this->data['error'] = "Activitat no trobada.";
             $this->twig = "activitat.html"; // Mostra la plantilla per defecte

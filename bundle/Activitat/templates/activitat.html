@@ -35,8 +35,9 @@
         id="paginationInput" 
         placeholder="Activitats per pàgina ..." 
         class="form-control mr-2" 
-        style="width: 300px;">
-    </div>
+        style="width: 300px;"
+        min="0">
+      </div>
 
     <div class="row mb-3">
       <div class="col">
@@ -73,9 +74,9 @@
         <label>SELECCIONA EL PREU</label>
         <div class="d-flex">
           <span class="align-self-center">De:</span>
-          <input id="preu1" type="number" class="form-control mx-2">
+          <input id="preu1" type="number" class="form-control mx-2" min="0">
           <span style="white-space: nowrap;" class="align-self-center">Fins a:</span>
-          <input id="preu2" type="number" class="form-control mx-2">
+          <input id="preu2" type="number" class="form-control mx-2" min="0">
         </div>
       </div>
     </div>
@@ -101,11 +102,12 @@
       <ul id="ulActivitats" class="list-group">
       </ul>
     </div>
-    <div id="pagination-controls" class="d-flex justify-content-center mt-3"></div>
+    <div id="pagination-controls" class="d-flex justify-content-center mt-3" ></div>
 
   </div>
 
 <script>
+
 
 let currentPage = 1; // Página actual
 let itemsPerPage = 5; // Elementos por página (puedes ajustar esto dinámicamente)
@@ -133,9 +135,6 @@ function createPaginationControls(totalItems, itemsPerPage) {
         paginationContainer.appendChild(button);
     }
 }
-
-
-
 
   const $ = e => document.getElementById(e)
   $("filtrarButton").addEventListener("click",filterFunction)

@@ -114,6 +114,7 @@ class ActivitatManager extends Activitat {
         }
         return false;
     }
+   
     public function addActivitatMultimedia($idActivitat, $idMultimedia)
     {
         try {
