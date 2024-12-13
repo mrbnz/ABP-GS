@@ -106,7 +106,7 @@
         <div class="row justify-content-center">
             <div class="col-12 col-md-8 col-lg-6">
                 <div class="activity-card p-4">
-                    {% if error %}
+                {% if error %}
                     <div class="alert alert-danger">{{ error }}</div>
                     {% endif %}
                     {% if success %}
@@ -118,8 +118,8 @@
                             {{ error }}<br>
                         {% endfor %}
                     </div>
-                    {% endif %}
-                    {% if activitat %}
+                {% endif %}
+                {% if activitat %}
                     <div class="text-center mb-4">
                         <img src="{{ activitat.imatge }}" alt="Imatge de l'activitat" class="activity-image rounded-top">
                         <!-- <p>{{ activitat.imatge }}</p> -->
@@ -136,7 +136,7 @@
                                 <i class="ri-map-pin-line me-2"></i><strong>Espai:</strong> {{ activitat.espai_nom }}
                             </div>
                             <div class="col-6">
-                                <i class="ri-user-line me-2"></i><strong>Places:</strong> {{ activitat.places_ocupades }} / {{ activitat.places_totals }}
+                                <i class="ri-user-line me-2"></i><strong>Places lliures:</strong> {{ activitat.places_totals - activitat.places_ocupades }} / {{ activitat.places_totals }}
                             </div>
                             <div class="col-6">
                                 <i class="ri-money-euro-circle-line me-2"></i><strong>Preu:</strong> {{ activitat.preu }}
@@ -157,18 +157,26 @@
                     {% endif %}
                     
                     <div class="text-center">
-                        <button class="btn btn-primary btn-lg me-2">
-                            <i class="ri-add-line me-2"></i>Inscriure's
+                        {% if mostrarInscrit %}
+                        <button onclick='window.location.href="/ABP-GS/activitat/inscripcio/{{ activitat.id }}"' class="btn btn-primary btn-lg me-2">
+                            <i class="ri-add-line me-2"></i>Desinscriure's
                         </button>
-                        <button onclick="window.history.back()" class="btn btn-outline-secondary btn-lg">
+                        {% else %}
+                            {% if mostrar %}
+                            <button onclick='window.location.href="/ABP-GS/activitat/inscripcio/{{ activitat.id }}"' class="btn btn-primary btn-lg me-2">
+                                <i class="ri-add-line me-2"></i>Inscriure's
+                            </button>
+                            {% endif %}
+                        {% endif %}
+                        <button onclick='window.location.href="/ABP-GS/activitat"' class="btn btn-outline-secondary btn-lg">
                             <i class="ri-arrow-left-line me-2"></i>Tornar
                         </button>
                     </div>
-                    {% else %}
+                {% else %}
                     <div class="alert alert-danger text-center">
                         No s'ha pogut carregar la informació de l'activitat.
                     </div>
-                    {% endif %}
+                {% endif %}
                 </div>
             </div>
         </div>
