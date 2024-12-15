@@ -14,20 +14,20 @@ class SignupController extends Controller
         }
 
         if ($_POST) {
-            $nom_usuari = filter_input(INPUT_POST, 'nom_usuari', FILTER_SANITIZE_STRING);
-            $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+            $nom_usuari = filter_input(INPUT_POST, 'nom_usuari', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
             $contrasenya = $_POST["contrasenya"];
             $confirmar_contrasenya = $_POST["confirmar_contrasenya"];
-            $telefon = filter_input(INPUT_POST, 'telefon', FILTER_SANITIZE_STRING);
-            $dni = filter_input(INPUT_POST, 'dni', FILTER_SANITIZE_STRING);
-            $nom = filter_input(INPUT_POST, 'nom', FILTER_SANITIZE_STRING);
-            $cognoms = filter_input(INPUT_POST, 'cognoms', FILTER_SANITIZE_STRING);
-            $data_naixement = filter_input(INPUT_POST, 'data_naixement', FILTER_SANITIZE_STRING);
+            $telefon = filter_input(INPUT_POST, 'telefon', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $dni = filter_input(INPUT_POST, 'dni', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $nom = filter_input(INPUT_POST, 'nom', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $cognoms = filter_input(INPUT_POST, 'cognoms', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $data_naixement = $_POST['data_naixement'] ?? null;
 
             // $this->data['debug'] .= " Totes les dades són presents.";
             // $this->data['debug'] .= " Les contrasenyes coincideixen.";
 
-            // $this->data['debug'] = "Dades rebudes: Usuari: $nom_usuari, Email: $email, Telèfon: $telefon, DNI: $dni, Nom: $nom, Cognoms: $cognoms, Data de naixement: $data_naixement\n";
+             $this->data['debug'] = "Dades rebudes: Usuari: $nom_usuari, Email: $email, Telèfon: $telefon, DNI: $dni, Nom: $nom, Cognoms: $cognoms, Data de naixement: $data_naixement\n";
 
             if ($nom_usuari && $email && $contrasenya && $confirmar_contrasenya && $telefon && $dni && $nom && $cognoms && $data_naixement) {
                 // $this->data['debug'] .= " Totes les dades són presents.";
@@ -43,6 +43,8 @@ class SignupController extends Controller
                     }
 
                     $hashedPassword = password_hash($contrasenya, PASSWORD_BCRYPT);
+                    //$this->data['debug'] .= " Contrasenya hasheada: $hashedPassword\n";
+                    //$this->data['debug'] .= " Dades rebudes: Usuari: $nom_usuari, Email: $email, Telèfon: $telefon, DNI: $dni, Nom: $nom, Cognoms: $cognoms, Data de naixement: $data_naixement\n";
                     if ($UsuariMng->registrar($nom_usuari, $email, $hashedPassword, $telefon, $dni, $data_naixement, $nom, $cognoms)) {
                         $this->data['success'] = "Registre exitós per l'usuari: $nom_usuari";
                         $this->redirect("login");

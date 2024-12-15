@@ -119,11 +119,12 @@
                 <input type="number" class="form-control" id="preu" name="preu" value="{{ activitat.preu }}" required>
             </div>
             <button type="submit" class="btn btn-danger">Guardar Canvis</button>
+                
         </form>
         {% else %}
         <div class="alert alert-danger">No s'ha pogut carregar la informació de l'activitat.</div>
         {% endif %}
-        <button onclick="window.history.back()" class="btn btn-secondary">Tornar</button>
+        <button onclick="window.location.href='/ABP-GS/activitat/llistaActivitatsPerEditar'" class="btn btn-secondary">Tornar</button>
     </div>
 </body>
 </html> 

@@ -38,7 +38,7 @@ class InscripcioManager
     {
         try {
             $consulta = (BdD::$connection)->prepare('
-                SELECT * FROM usuaris WHERE id IN (SELECT id_usuari FROM inscripcio WHERE id_activitat = :idActivitat)
+                SELECT * FROM usuari WHERE id IN (SELECT id_usuari FROM inscripcio WHERE id_activitat = :idActivitat)
             ');
             $consulta->bindValue(':idActivitat', $idActivitat, PDO::PARAM_INT);
             $consulta->execute();

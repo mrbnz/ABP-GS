@@ -61,7 +61,15 @@ class ActivitatController extends Controller
         if (isset($_SESSION['username'])) {
             $usuariMNG = new UsuariManager();
             $usuariInscripcio = $usuariMNG->getUserByUsername($_SESSION['username']);
+            
+            if (!$usuariInscripcio) {
+                echo "***Error***: Usuari no trobat amb username: " . $_SESSION['username'];
+                return;
+            }
 
+            // Afegeix aquesta línia per verificar l'ID de l'usuari
+            echo "ID de l'usuari: " . $usuariInscripcio["id"];
+            
             $inscripcioMNG = new InscripcioManager();
             $inscripcio = $inscripcioMNG->getInscriptionForUser($usuariInscripcio["id"], $idActivitat);
             // print_r($usuariInscripcio["id"]);
@@ -285,24 +293,27 @@ class ActivitatController extends Controller
         $this->assignarOrganitzador($idActivitat);
     }
 
-    public function afegirInscripcio($idActivitat)
+    public function afegirInscripcio($idActivitat, $idUsuari)
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $userId = $_POST['userId'] ?? null;
-            if ($userId) {
-                $inscripcioMNG = new InscripcioManager();
-                $usuariMNG = new UsuariManager();
-                if ($usuariMNG->existeixUsuari($userId)) {
-                    $inscripcioMNG->afegirInscripcio($idActivitat, $userId);
-                    $this->data['success'] = "Usuari inscrit correctament.";
-                } else {
-                    $this->data['error'] = "L'usuari no existeix.";
-                }
-            } else {
-                $this->data['error'] = "Falten dades!";
-            }
+        // Verifica que l'usuari existeix
+        if (!$this->existeixUsuari($idUsuari)) {
+            echo "***Error***: L'usuari amb ID $idUsuari no existeix.";
+            return false;
         }
-        $this->gestionarInscripcions($idActivitat);
+
+        try {
+            $consulta = (BdD::$connection)->prepare('
+                INSERT INTO inscripcio (id_usuari, id_activitat, estat) VALUES (:idUsuari, :idActivitat, :estat)
+            ');
+            $consulta->bindValue(':idUsuari', $idUsuari, PDO::PARAM_INT);
+            $consulta->bindValue(':idActivitat', $idActivitat, PDO::PARAM_INT);
+            $consulta->bindValue(':estat', 'confirmada', PDO::PARAM_STR);
+            return $consulta->execute();
+        } catch (PDOException $e) {
+            echo "***Error***: " . $e->getMessage();
+            error_log("Error al afegir inscripció: " . $e->getMessage());
+            return false;
+        }
     }
 
     private function validarDadesActivitat($dades) {
@@ -322,6 +333,22 @@ class ActivitatController extends Controller
         }
         
         return true;
+    }
+
+    public function getUserByUsername($username)
+    {
+        try {
+            $consulta = BdD::$connection->prepare('
+                SELECT id, nom_usuari, email, telefon, dni, DATE_FORMAT(data_naixement, "%Y-%m-%d") as data_naixement, nom, cognoms, administrador, contrassenya 
+                FROM `usuari` 
+                WHERE nom_usuari = ?
+            ');
+            $consulta->execute([$username]);
+            return $consulta->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("***Error***: " . $e->getMessage());
+            return null;
+        }
     }
 
 }

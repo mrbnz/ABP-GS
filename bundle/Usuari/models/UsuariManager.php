@@ -49,27 +49,24 @@ class UsuariManager extends Usuari
 		}
 	}
 
-	public function registrar($nom_usuari, $email, $contrasenya, $telefon, $dni, $data_naixement, $nom, $cognoms)
+	public function registrar($nom_usuari, $email, $hashedPassword, $telefon, $dni, $data_naixement, $nom, $cognoms)
 	{
 		try {
-			$consulta = (BdD::$connection)->prepare('
+			$consulta = BdD::$connection->prepare('
 				INSERT INTO usuari (nom_usuari, email, contrassenya, telefon, dni, data_naixement, nom, cognoms)
-				VALUES (:nom_usuari, :email, :contrasenya, :telefon, :dni, :data_naixement, :nom, :cognoms)
+				VALUES (:nom_usuari, :email, :contrassenya, :telefon, :dni, :data_naixement, :nom, :cognoms)
 			');
-
-			$consulta->bindValue(':nom_usuari', $nom_usuari);
-			$consulta->bindValue(':email', $email);
-			$consulta->bindValue(':contrasenya', $contrasenya);
-			$consulta->bindValue(':telefon', $telefon);
-			$consulta->bindValue(':dni', $dni);
-			$consulta->bindValue(':data_naixement', $data_naixement);
-			$consulta->bindValue(':nom', $nom);
-			$consulta->bindValue(':cognoms', $cognoms);
-			$consulta->execute();
-
-			return true;
+			$consulta->bindParam(':nom_usuari', $nom_usuari);
+			$consulta->bindParam(':email', $email);
+			$consulta->bindParam(':contrassenya', $hashedPassword);
+			$consulta->bindParam(':telefon', $telefon);
+			$consulta->bindParam(':dni', $dni);
+			$consulta->bindParam(':data_naixement', $data_naixement);
+			$consulta->bindParam(':nom', $nom);
+			$consulta->bindParam(':cognoms', $cognoms);
+			return $consulta->execute();
 		} catch (PDOException $e) {
-			error_log("***Error***: " . $e->getMessage());
+			error_log("***Error en el registre de l'usuari***: " . $e->getMessage());
 			return false;
 		}
 	}
@@ -162,19 +159,31 @@ class UsuariManager extends Usuari
 	public function updatePassword($userId, $currentPassword, $newPassword)
 	{
 		try {
-			$consulta = (BdD::$connection)->prepare('SELECT contrasenya FROM `usuari` WHERE id = :id');
-			$consulta->bindParam(':id', $userId, PDO::PARAM_INT);
-			$consulta->execute();
-			$user = $consulta->fetch(PDO::FETCH_ASSOC);
-
-			if (password_verify($currentPassword, $user['contrasenya'])) {
-				$hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
-				$update = (BdD::$connection)->prepare('UPDATE `usuari` SET contrasenya = :newPassword WHERE id = :id');
-				$update->bindParam(':newPassword', $hashedPassword, PDO::PARAM_STR);
-				$update->bindParam(':id', $userId, PDO::PARAM_INT);
-				return $update->execute();
+			// Obtenir la contrasenya actual de l'usuari
+			$user = $this->getUserById($userId);
+			if ($user) {
+				if (!empty($user['contrassenya'])) {
+					if (password_verify($currentPassword, $user['contrassenya'])) {
+						// Hashear la nova contrasenya
+						$hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
+						
+						// Actualitzar la contrasenya a la base de dades
+						$update = BdD::$connection->prepare('
+							UPDATE `usuari` SET contrassenya = :newPassword WHERE id = :id
+						');
+						$update->bindParam(':newPassword', $hashedPassword, PDO::PARAM_STR);
+						$update->bindParam(':id', $userId, PDO::PARAM_INT);
+						return $update->execute();
+					} else {
+						error_log("***Error: Contrasenya actual incorrecta per l'usuari ID: $userId***");
+						return false;
+					}
+				} else {
+					error_log("***Error: L'usuari no té una contrasenya registrada.***");
+					return false;
+				}
 			} else {
-				error_log("***Error: Contrasenya actual incorrecta per l'usuari ID: $userId***");
+				error_log("***Error: Usuari no trobat.***");
 				return false;
 			}
 		} catch (PDOException $e) {
@@ -186,7 +195,21 @@ class UsuariManager extends Usuari
 	public function getUserByUsername($username)
 	{
 		try {
-			$consulta = (BdD::$connection)->prepare('SELECT id, nom_usuari, email, telefon, dni, DATE_FORMAT(data_naixement, "%Y-%m-%d") as data_naixement, nom, cognoms, administrador FROM `usuari` WHERE nom_usuari = ?');
+			$consulta = BdD::$connection->prepare('
+				SELECT 
+					id, 
+					nom_usuari, 
+					email, 
+					telefon, 
+					dni, 
+					DATE_FORMAT(data_naixement, "%Y-%m-%d") as data_naixement, 
+					nom, 
+					cognoms, 
+					administrador, 
+					contrassenya 
+				FROM `usuari` 
+				WHERE nom_usuari = ?
+			');
 			$consulta->execute([$username]);
 			return $consulta->fetch(PDO::FETCH_ASSOC);
 		} catch (PDOException $e) {

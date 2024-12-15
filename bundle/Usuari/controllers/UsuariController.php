@@ -86,22 +86,38 @@ class UsuariController extends Controller
             $newPassword = $_POST['newPassword'] ?? null;
             $confirmPassword = $_POST['confirmPassword'] ?? null;
 
-            if (empty($username) || empty($currentPassword) || empty($newPassword) || empty($confirmPassword)) {
-                $this->data['error'] = "Falten dades!";
-            } elseif ($newPassword !== $confirmPassword) {
-                $this->data['error'] = "Les noves contrasenyes no coincideixen.";
-            } else {
-                $user = $usuariMng->getUserByUsername($username);
-                if ($user && password_verify($currentPassword, $user['contrasenya'])) {
-                    if ($usuariMng->updatePassword($user['id'], $currentPassword, $newPassword)) {
-                        $this->data['success'] = "Contrasenya actualitzada correctament.";
+            if ($username && $currentPassword && $newPassword && $confirmPassword) {
+                if ($newPassword === $confirmPassword) {
+                    // Obtenir l'usuari per ID
+                    $usuari = $usuariMng->getUserByUsername($username);
+                    
+                    if ($usuari) {
+                        if (!empty($usuari['contrassenya'])) {
+                            if ($usuari && password_verify($currentPassword, $usuari['contrassenya'])) {
+                                // Actualitzar la contrasenya
+                                if ($usuariMng->updatePassword($usuari['id'], $currentPassword, $newPassword)) {
+                                    $this->data['success'] = "Contrasenya actualitzada correctament.";
+                                } else {
+                                    $this->data['error'] = "Error en actualitzar la contrasenya.";
+                                }
+                            } else {
+                                $this->data['error'] = "Contrasenya actual incorrecta.";
+                            }
+                        } else {
+                            $this->data['error'] = "L'usuari no té una contrasenya registrada.";
+                        }
                     } else {
-                        $this->data['error'] = "Error en actualitzar la contrasenya.";
+                        $this->data['error'] = "Usuari no trobat.";
                     }
                 } else {
-                    $this->data['error'] = "Contrasenya actual incorrecta.";
+                    $this->data['error'] = "Les noves contrasenyes no coincideixen.";
                 }
+            } else {
+                $this->data['error'] = "Falten dades!";
             }
+
+            $this->twig = 'canviar_contrasenya.html';
+        } else {
             $this->twig = 'canviar_contrasenya.html';
         }
     }
@@ -169,7 +185,7 @@ class UsuariController extends Controller
 
                 if ($usuari) {
                     // Verifica la contrasenya
-                    if (password_verify($contrasenya, $usuari['contrassenya'])) {
+                    if ($usuari && password_verify($contrasenya, $usuari['contrassenya'])) {
                         // Elimina l'usuari
                         if ($usuariMng->eliminarUsuari($nomUsuari)) {
                             $this->data['success'] = "Usuari eliminat correctament.";
