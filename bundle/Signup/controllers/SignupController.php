@@ -5,7 +5,7 @@ class SignupController extends Controller
     public function process($params)
     {
 
-        $this->data['debug'] = "";
+        // $this->data['debug'] = "";
 
         if (isset($_SESSION['username'])) {
             $this->data['missatge'] = "Ja estàs logat com a " . $_SESSION['username'] . ". No pots registrar-te de nou.";
@@ -24,15 +24,15 @@ class SignupController extends Controller
             $cognoms = filter_input(INPUT_POST, 'cognoms', FILTER_SANITIZE_STRING);
             $data_naixement = filter_input(INPUT_POST, 'data_naixement', FILTER_SANITIZE_STRING);
 
-            $this->data['debug'] .= " Totes les dades són presents.";
-            $this->data['debug'] .= " Les contrasenyes coincideixen.";
+            // $this->data['debug'] .= " Totes les dades són presents.";
+            // $this->data['debug'] .= " Les contrasenyes coincideixen.";
 
-            $this->data['debug'] = "Dades rebudes: Usuari: $nom_usuari, Email: $email, Telèfon: $telefon, DNI: $dni, Nom: $nom, Cognoms: $cognoms, Data de naixement: $data_naixement\n";
+            // $this->data['debug'] = "Dades rebudes: Usuari: $nom_usuari, Email: $email, Telèfon: $telefon, DNI: $dni, Nom: $nom, Cognoms: $cognoms, Data de naixement: $data_naixement\n";
 
             if ($nom_usuari && $email && $contrasenya && $confirmar_contrasenya && $telefon && $dni && $nom && $cognoms && $data_naixement) {
-                $this->data['debug'] .= " Totes les dades són presents.";
+                // $this->data['debug'] .= " Totes les dades són presents.";
                 if ($contrasenya === $confirmar_contrasenya) {
-                    $this->data['debug'] .= " Les contrasenyes coincideixen.";
+                    // $this->data['debug'] .= " Les contrasenyes coincideixen.";
                     $UsuariMng = new UsuariManager();
 
                     // Validar si el nom d'usuari ja existeix
@@ -62,7 +62,7 @@ class SignupController extends Controller
             $this->twig = "signup.html";
         }
 
-        $this->data['debug'] .= " Totes les dades són presents.";
-        $this->data['debug'] .= " Les contrasenyes coincideixen.";
+        // $this->data['debug'] .= " Totes les dades són presents.";
+        // $this->data['debug'] .= " Les contrasenyes coincideixen.";
     }
 } 

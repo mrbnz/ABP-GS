@@ -28,7 +28,7 @@ class AdminController extends Controller
                     $userId = $_POST['userId'];
                     if (!isset($userId) || !is_numeric($userId)) {
                         $this->data['error'] = "ID no vàlid.";
-                        $this->data['debug'] = "ID no vàlid per l'usuari amb ID: $userId";
+                        // $this->data['debug'] = "ID no vàlid per l'usuari amb ID: $userId";
                         return null;
                     }
                     $user = $usuariMng->getUserById($userId);
@@ -36,7 +36,7 @@ class AdminController extends Controller
                         $this->data['user'] = $user;
                     } else {
                         $this->data['error'] = "Usuari no trobat.";
-                        $this->data['debug'] = "Usuari no trobat amb ID: $userId";
+                        // $this->data['debug'] = "Usuari no trobat amb ID: $userId";
                     }
                 }
                 $this->twig = 'edit_user.html';
@@ -56,7 +56,7 @@ class AdminController extends Controller
                     if ($userId && $nomUsuari && $email && $telefon && $dni && $dataNaixement && $nom && $cognoms && $administrador !== null) {
                         if ($usuariMng->updateUser($userId, $nomUsuari, $email, $telefon, $dni, $dataNaixement, $nom, $cognoms, $administrador)) {
                             $this->data['success'] = "Usuari actualitzat correctament.";
-                            $this->data['debug'] = "Usuari ID: $userId actualitzat correctament.";
+                            // $this->data['debug'] = "Usuari ID: $userId actualitzat correctament.";
                         } else {
                             $this->data['error'] = "Error en actualitzar l'usuari.";
                         }

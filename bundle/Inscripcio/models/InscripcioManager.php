@@ -6,10 +6,11 @@ class InscripcioManager
     {
         try {
             $consulta = (BdD::$connection)->prepare('
-                INSERT INTO inscripcio (id_usuari, id_activitat) VALUES (:idUsuari, :idActivitat)
+                INSERT INTO inscripcio (id_usuari, id_activitat, estat) VALUES (:idUsuari, :idActivitat, :estat)
             ');
             $consulta->bindValue(':idUsuari', $idUsuari, PDO::PARAM_INT);
             $consulta->bindValue(':idActivitat', $idActivitat, PDO::PARAM_INT);
+            $consulta->bindValue(':estat', 'confirmada', PDO::PARAM_STR);
             return $consulta->execute();
         } catch (PDOException $e) {
             echo "***Error***: " . $e->getMessage();
@@ -71,5 +72,12 @@ class InscripcioManager
     }
 }
 
+public function existeixUsuari($idUsuari)
+{
+    $consulta = (BdD::$connection)->prepare('SELECT COUNT(*) FROM usuari WHERE id = :idUsuari');
+    $consulta->bindValue(':idUsuari', $idUsuari, PDO::PARAM_INT);
+    $consulta->execute();
+    return $consulta->fetchColumn() > 0;
+}
 
 } 

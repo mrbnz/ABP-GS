@@ -64,8 +64,8 @@ class ActivitatController extends Controller
 
             $inscripcioMNG = new InscripcioManager();
             $inscripcio = $inscripcioMNG->getInscriptionForUser($usuariInscripcio["id"], $idActivitat);
-            print_r($usuariInscripcio["id"]);
-            print_r($idActivitat);
+            // print_r($usuariInscripcio["id"]);
+            // print_r($idActivitat);
             if($inscripcio){
                 if($inscripcio["estat"]=="cancel·lada"){
                     $inscripcioMNG->updateInscripcioEstat($usuariInscripcio["id"], $idActivitat, "confirmada");
@@ -74,7 +74,7 @@ class ActivitatController extends Controller
                     $inscripcioMNG->updateInscripcioEstat($usuariInscripcio["id"], $idActivitat, "cancel·lada");
                 }
                 else{
-                    print_r("Else hola");
+                    // print_r("Else hola");
                 }
                 //Podriem posar més estats en cas de necessitar-los
             }
@@ -108,11 +108,14 @@ class ActivitatController extends Controller
                 $usuariInscripcio = $usuariMNG->getUserByUsername($_SESSION['username']);
                 $inscripcioMNG = new InscripcioManager();
                 $inscripcio = $inscripcioMNG->getInscriptionForUser($usuariInscripcio["id"], $id);
-                print_r($inscripcio["estat"]);
-                if($inscripcio["estat"]=="confirmada"){
-                    $this->data['mostrarInscrit'] = true;
-                }
-                else{
+                // print_r($inscripcio["estat"]);
+                if ($inscripcio && isset($inscripcio["estat"])) {
+                    if ($inscripcio["estat"] == "confirmada") {
+                        $this->data['mostrarInscrit'] = true;
+                    } else {
+                        $this->data['mostrarInscrit'] = false;
+                    }
+                } else {
                     $this->data['mostrarInscrit'] = false;
                 }
             }
@@ -129,11 +132,11 @@ class ActivitatController extends Controller
         }
 
         // Debug de la foto
-        if (isset($activitat['imatge'])) {
-            $this->data['activitat']['imatge'] = $activitat['imatge'];
-        } else {
-            $this->data['activitat']['imatge'] = null;
-        }
+        // if (isset($activitat['imatge'])) {
+        //     $this->data['activitat']['imatge'] = $activitat['imatge'];
+        // } else {
+        //     $this->data['activitat']['imatge'] = null;
+        // }
     }
     public function afegirActivitat()
     {
@@ -288,8 +291,13 @@ class ActivitatController extends Controller
             $userId = $_POST['userId'] ?? null;
             if ($userId) {
                 $inscripcioMNG = new InscripcioManager();
-                $inscripcioMNG->afegirInscripcio($idActivitat, $userId);
-                $this->data['success'] = "Usuari inscrit correctament.";
+                $usuariMNG = new UsuariManager();
+                if ($usuariMNG->existeixUsuari($userId)) {
+                    $inscripcioMNG->afegirInscripcio($idActivitat, $userId);
+                    $this->data['success'] = "Usuari inscrit correctament.";
+                } else {
+                    $this->data['error'] = "L'usuari no existeix.";
+                }
             } else {
                 $this->data['error'] = "Falten dades!";
             }

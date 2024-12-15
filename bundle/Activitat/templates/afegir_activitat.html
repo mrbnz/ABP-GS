@@ -5,6 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Afegir Activitat</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelector("form").addEventListener("submit", (event) => {
+                const fields = ["nom", "descripcio_breu", "data", "id_espai", "id_tipus_activitat", "places_totals", "preu", "organitzador", "foto_portada"];
+                let valid = true;
+                let errorMessages = [];
+
+                fields.forEach(field => {
+                    const input = document.getElementById(field);
+                    if (!input.value) {
+                        input.classList.add("is-invalid");
+                        valid = false;
+                        errorMessages.push(`El camp ${field} és obligatori.`);
+                    } else {
+                        input.classList.remove("is-invalid");
+                    }
+                });
+
+                // Verificar si la data és correcta (no pot ser una data passada)
+                const dataInput = document.getElementById("data");
+                const today = new Date().toISOString().split('T')[0];
+                if (dataInput.value < today) {
+                    dataInput.classList.add("is-invalid");
+                    valid = false;
+                    errorMessages.push("La data no pot ser una data passada.");
+                } else {
+                    dataInput.classList.remove("is-invalid");
+                }
+
+                // Verificar que les places no siguin negatives o zero
+                const placesInput = document.getElementById("places_totals");
+                if (placesInput.value <= 0) {
+                    placesInput.classList.add("is-invalid");
+                    valid = false;
+                    errorMessages.push("El nombre de places ha de ser major que zero.");
+                } else {
+                    placesInput.classList.remove("is-invalid");
+                }
+
+                if (!valid) {
+                    event.preventDefault();
+                    const errorMessagesDiv = document.getElementById("errorMessages");
+                    errorMessagesDiv.innerHTML = errorMessages.join("<br>");
+                    errorMessagesDiv.style.display = "block";
+                }
+            });
+        });
+    </script>
 </head>
 <body>
     <div class="container my-5">
@@ -24,6 +72,10 @@
             {% endfor %}
         </div>
         {% endif %}
+
+        <!-- errorMessages JS -->
+        <div id="errorMessages" class="alert alert-danger mt-3 text-center" style="display: none;"></div>
+
         <h1 class="text-center mb-4">Afegir Nova Activitat</h1>
         <form method="POST" action="/ABP-GS/activitat/afegirActivitat" enctype="multipart/form-data" novalidate>
             <div class="row">

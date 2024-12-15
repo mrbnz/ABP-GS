@@ -6,6 +6,35 @@
     <title>Editar Usuari</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll("form").forEach(form => {
+                form.addEventListener("submit", (event) => {
+                    const fields = ["nomUsuari", "email", "telefon", "data_naixement", "dni", "nom", "cognoms"];
+                    let valid = true;
+                    let errorMessages = [];
+
+                    fields.forEach(field => {
+                        const input = document.getElementById(field);
+                        if (input && !input.value) {
+                            input.classList.add("is-invalid");
+                            valid = false;
+                            errorMessages.push(`El camp ${field} és obligatori.`);
+                        } else if (input) {
+                            input.classList.remove("is-invalid");
+                        }
+                    });
+
+                    if (!valid) {
+                        event.preventDefault();
+                        const errorMessagesDiv = document.getElementById("errorMessages");
+                        errorMessagesDiv.innerHTML = errorMessages.join("<br>");
+                        errorMessagesDiv.style.display = "block";
+                    }
+                });
+            });
+        });
+    </script>
 </head>
 <body>
     <div class="container my-5">
@@ -21,6 +50,9 @@
     {% if debug %}
         <div class="alert alert-secondary">{{ debug }}</div>
     {% endif %}
+
+    <div id="errorMessages" class="alert alert-danger mt-3 text-center" style="display: none;"></div>
+
         <h1 class="text-center mb-4">Editar Usuari</h1>
 
         <form method="POST" action="/ABP-GS/admin/edit_user" class="mb-4">
@@ -78,7 +110,6 @@
         </form>
         {% endif %}
         <button onclick="window.history.back()" class="btn btn-secondary">Tornar</button>
-
     </div>
 </body>
 </html> 
