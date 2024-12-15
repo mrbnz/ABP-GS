@@ -26,7 +26,7 @@ class LoginController extends Controller
 			}
 			$this->redirect("");
 		} else {
-			if ($_POST) {
+			if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				$nom_usuari = isset($_POST["usuari"]) ? trim($_POST["usuari"]) : null;
 				$contrasenya = isset($_POST["contrasenya"]) ? $_POST["contrasenya"] : null;
 				$recorda = isset($_POST["recorda"]) ? $_POST["recorda"] : null;
@@ -34,23 +34,24 @@ class LoginController extends Controller
 				if ($nom_usuari && $contrasenya) {
 					$UsuariMng = new UsuariManager();
 					if ($UsuariMng->verificar($nom_usuari, $contrasenya)) {
-						$this->data['success'] = "Login exitós per l'usuari: " . $nom_usuari;
+						$this->data['success'] = "Login exitós per l'usuari: " . htmlspecialchars($nom_usuari, ENT_QUOTES, 'UTF-8');
 						$this->login($nom_usuari);
 
 						// Si l'usuari ha marcat "Recorda'm", crea una cookie
 						if ($recorda) {
-							setcookie("session_username", $nom_usuari, time() + (86400 * 30), "/"); // Cookie per 30 dies
-						}
-
-						// Recupera la cookie i verifica si coincideix amb el nom d'usuari
-						if (isset($_COOKIE["session_username"]) && $_COOKIE["session_username"] == $nom_usuari) {
-							$this->redirect("login");
+							setcookie("session_username", $nom_usuari, time() + (86400 * 30), "/", "", false, true);
+							error_log("Cookie 'session_username' establerta a: " . $nom_usuari);
 						} else {
-							$this->redirect("");
+							// Si no s'ha marcat, s'elimina la cookie si existeix
+							if (isset($_COOKIE["session_username"])) {
+								setcookie("session_username", "", time() - 3600, "/", "", false, true);
+								error_log("Cookie 'session_username' eliminada.");
+							}
 						}
 
+						$this->redirect(""); // Redirigeix a la pàgina principal
 					} else {
-						$this->data['error'] = "Login fallit per l'usuari: " . $nom_usuari;
+						$this->data['error'] = "Login fallit per l'usuari: " . htmlspecialchars($nom_usuari, ENT_QUOTES, 'UTF-8');
 						$this->twig = "login.html";
 					}
 				} else {
@@ -58,7 +59,8 @@ class LoginController extends Controller
 					$this->twig = "login.html";
 				}
 			} else {
-				//$this->data['debug'] = "User no logat, enviem a login";
+				// Passa el nom d'usuari des de la cookie si existeix
+				$this->data['savedUsername'] = isset($_COOKIE["session_username"]) ? htmlspecialchars($_COOKIE["session_username"], ENT_QUOTES, 'UTF-8') : '';
 				$this->twig = "login.html";
 			}
 		}
@@ -70,6 +72,10 @@ class LoginController extends Controller
 		$UsuariMng = new UsuariManager();
 		$UsuariMng->tancar();
 		//$this->data['debug'] = "S'ha cridat Logout";
+		// Elimina la cookie de username
+		if (isset($_COOKIE["session_username"])) {
+			setcookie("session_username", "", time() - 3600, "/", "", false, true);
+		}
 		$this->redirect("hola");
 	}
 }

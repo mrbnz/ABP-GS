@@ -12,16 +12,16 @@ class UsuariManager extends Usuari
 			return true;
 		} else {
 			try {
-				$consulta = (BdD::$connection)->prepare('
+				$consulta = BdD::$connection->prepare('
 					SELECT contrassenya, administrador
 					FROM usuari
 					WHERE nom_usuari = :nom_usuari
 				');
-	
+
 				$consulta->bindValue(':nom_usuari', $nom_usuari);
 				$consulta->execute();
 				$resultado = $consulta->fetch(PDO::FETCH_ASSOC);
-	
+
 				if ($resultado && password_verify($contrasenya, $resultado["contrassenya"])) {
 					$_SESSION['username'] = $nom_usuari;
 					$_SESSION['is_admin'] = $resultado['administrador']; // Guardar si és administrador
@@ -37,6 +37,7 @@ class UsuariManager extends Usuari
 			}
 		}
 	}
+
 	public function tancar()
 	{
 		try {
@@ -195,18 +196,18 @@ class UsuariManager extends Usuari
 	}
 
 	public function comprovarUsuariExistent($nom_usuari)
-{
-    try {
-        $consulta = (BdD::$connection)->prepare('SELECT COUNT(*) FROM usuari WHERE nom_usuari = :nom_usuari');
-        $consulta->bindValue(':nom_usuari', $nom_usuari);
-        $consulta->execute();
-        $count = $consulta->fetchColumn();
-        return $count > 0;
-    } catch (PDOException $e) {
-        error_log("***Error***: " . $e->getMessage());
-        return false;
-    }
-}
+	{
+		try {
+			$consulta = (BdD::$connection)->prepare('SELECT COUNT(*) FROM usuari WHERE nom_usuari = :nom_usuari');
+			$consulta->bindValue(':nom_usuari', $nom_usuari);
+			$consulta->execute();
+			$count = $consulta->fetchColumn();
+			return $count > 0;
+		} catch (PDOException $e) {
+			error_log("***Error***: " . $e->getMessage());
+			return false;
+		}
+	}
 
 	public function updateUserByUsername($username, $nomUsuari, $email, $telefon, $dni, $dataNaixement, $nom, $cognoms)
 	{
