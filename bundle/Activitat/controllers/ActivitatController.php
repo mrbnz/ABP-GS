@@ -305,7 +305,7 @@ class ActivitatController extends Controller
         if (empty($dades['descripcio'])) $errors[] = "La descripció és obligatòria";
         if (empty($dades['data'])) $errors[] = "La data és obligatòria";
         if (empty($dades['places_totals']) || !is_numeric($dades['places_totals'])) $errors[] = "Les places totals han de ser un número vàlid";
-        if (empty($dades['preu']) || !is_numeric($dades['preu'])) $errors[] = "El preu ha de ser un número vàlid";
+        if ((empty($dades['preu']) && $dades['preu'] != "0") || !is_numeric($dades['preu'])) $errors[] = "El preu ha de ser un número vàlid";
         if (empty($dades['id_espai'])) $errors[] = "Cal seleccionar un espai";
         if (empty($dades['id_tipus_activitat'])) $errors[] = "Cal seleccionar un tipus d'activitat";
         
