@@ -13,6 +13,11 @@
             width: 100%;
             margin-bottom: 10px;
         }
+        @media (max-width: 768px) {
+            .btn {
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -32,19 +37,19 @@
         
         <h1 class="text-center mb-4">Benvingut al Panell d'Usuari</h1>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-lg-6 col-md-12 mb-4">
                 <div class="card">
                     <div class="card-header bg-danger text-white">Gestió del Meu Perfil</div>
                     <div class="card-body">
                         <p>Actualitzeu la informació del vostre perfil.</p>
                         <a href="/ABP-GS/usuari/veureInfo" class="btn btn-info">Veure Perfil</a>
                         <a href="/ABP-GS/usuari/editarPerfil" class="btn btn-primary">Editar Perfil</a>
-                        <a href="/ABP-GS/usuari/delete_profile" class="btn btn-danger">Eliminar Perfil</a>
+                        <a href="/ABP-GS/usuari/deleteUser" class="btn btn-danger">Eliminar Perfil</a>
                         <a href="/ABP-GS/usuari/canviarContrasenya" class="btn btn-warning">Canviar Contrasenya</a>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-lg-6 col-md-12 mb-4">
                 <div class="card">
                     <div class="card-header bg-warning text-white">Gestió de les Meves Activitats</div>
                     <div class="card-body">
@@ -52,15 +57,6 @@
                         <a href="/ABP-GS/usuari/view_activities" class="btn btn-danger">Veure Activitats Inscrites</a>
                         <a href="/ABP-GS/activitat" class="btn btn-info">Gestionar Activitats</a>
                         <!-- <a href="/ABP-GS/usuari/add_activity" class="btn btn-success">Afegir Activitat</a> -->
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header bg-warning text-white">Configuració</div>
-                    <div class="card-body">
-                        <p>Personalitzeu les opcions del vostre compte.</p>
-                        <a href="/ABP-GS/usuari/configure_options" class="btn btn-warning">Configurar Opcions</a>
                     </div>
                 </div>
             </div>

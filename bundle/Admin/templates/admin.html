@@ -24,9 +24,6 @@
         .bg-gestio-activitats {
             background-color: #F6A600;
         }
-        .bg-configuracio {
-            background-color: #F6A600;
-        }
         .text-dark {
             color: #000;
         }
@@ -58,13 +55,21 @@
             background-color: #6c757d;
             border-color: #6c757d;
         }
+        @media (max-width: 768px) {
+            .card {
+                margin-bottom: 15px;
+            }
+            .btn {
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container my-5">
         <h1 class="text-center mb-4">Benvingut al Panell d'Administrador</h1>
         <div class="row">
-            <div class="col-lg-4 col-md-6">
+            <div class="col-lg-6 col-md-12">
                 <div class="card text-center shadow-sm">
                     <div class="card-header bg-gestio-usuaris text-white">
                         Gestió d'Usuaris
@@ -92,7 +97,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6">
+            <div class="col-lg-6 col-md-12">
                 <div class="card text-center shadow-sm">
                     <div class="card-header bg-gestio-activitats text-white">
                         Gestió d'Activitats
@@ -105,20 +110,6 @@
                             <a href="/ABP-GS/admin/llista_activitats_assignar" class="btn btn-info mb-2">Assignar Activitat</a>
                             <a href="/ABP-GS/admin/delete_activity" class="btn btn-danger mb-2">Eliminar Activitat</a>
                             <a href="/ABP-GS/activitat/veureActivitatsAdmin" class="btn btn-secondary">Veure Activitats</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="card text-center shadow-sm">
-                    <div class="card-header bg-configuracio text-dark">
-                        Configuració
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">Personalitzeu les opcions del sistema.</p>
-                        <div class="d-flex flex-column">
-                            <a href="/ABP-GS/admin/config" class="btn btn-warning">Configurar</a>
-                            <a href="/ABP-GS/admin/system_settings" class="btn btn-light">Configuració del Sistema</a>
                         </div>
                     </div>
                 </div>

@@ -9,28 +9,31 @@
 <body>
     <div class="container my-5">
         {% if error %}
-        <div class="alert alert-danger">{{ error }}</div>
-    {% endif %}
-    {% if success %}
-        <div class="alert alert-success">{{ success }}</div>
-    {% endif %}
-    {% if missatge %}
-        <div class="alert alert-info">{{ missatge }}</div>
-    {% endif %}
-    {% if debug %}
-        <div class="alert alert-secondary">{{ debug }}</div>
-    {% endif %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+        {% if success %}
+            <div class="alert alert-success">{{ success }}</div>
+        {% endif %}
+        {% if missatge %}
+            <div class="alert alert-info">{{ missatge }}</div>
+        {% endif %}
+        {% if debug %}
+            <div class="alert alert-secondary">{{ debug }}</div>
+        {% endif %}
         <h1 class="text-center mb-4">Eliminar Usuari</h1>
         <form method="POST" action="/ABP-GS/admin/delete_user" class="mb-4">
             <div class="mb-3">
-                <label for="userId" class="form-label">ID de l'Usuari</label>
-                <input type="text" class="form-control" id="userId" name="userId" required placeholder="Introdueix l'ID de l'usuari">
+                <label for="nomUsuari" class="form-label">Nom d'Usuari</label>
+                <input type="text" class="form-control" id="nomUsuari" name="nomUsuari" required placeholder="Introdueix el nom d'usuari">
+            </div>
+            <div class="mb-3">
+                <label for="contrasenya" class="form-label">Contrasenya</label>
+                <input type="password" class="form-control" id="contrasenya" name="contrasenya" required placeholder="Introdueix la teva contrasenya">
             </div>
             <button type="submit" class="btn btn-danger">Eliminar</button>
             <a href="/admin" class="btn btn-secondary">Cancel·lar</a>
         </form>
         <button onclick="window.history.back()" class="btn btn-secondary">Tornar</button>
-
     </div>
 </body>
 </html> 

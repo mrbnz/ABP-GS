@@ -34,6 +34,9 @@ class UsuariController extends Controller
             case 'canviarContrasenya':
                 $this->mostrarCanviarContrasenya();
                 break;
+            case 'deleteUser':
+                $this->deleteUser();
+                break;
             default:
                 $this->mostrarPanell($params);
                 break;
@@ -47,7 +50,7 @@ class UsuariController extends Controller
         if ($userId) {
             $usuari = $usuariMng->getUserById($userId);
             $this->data['usuari'] = $usuari;
-            $this->data['debug'] = "ID d'usuari obtingut de la sessió: " . $userId;
+            // $this->data['debug'] = "ID d'usuari obtingut de la sessió: " . $userId;
         } else {
             $this->data['error'] = "No s'ha proporcionat un ID d'usuari vàlid.";
         }
@@ -63,7 +66,7 @@ class UsuariController extends Controller
             if ($usuari) {
                 $this->data['usuari'] = $usuari;
                 $this->twig = 'perfil_usuari.html';
-                $this->data['success'] = "Usuari trobat: " . $usuari['nom_usuari'];
+                // $this->data['success'] = "Usuari trobat: " . $usuari['nom_usuari'];
             } else {
                 $this->data['error'] = "Usuari no trobat.";
                 $this->twig = 'menu_usuari.html';
@@ -152,5 +155,39 @@ class UsuariController extends Controller
     private function mostrarCanviarContrasenya()
     {
         $this->twig = 'canviar_contrasenya.html';
+    }
+
+    public function deleteUser()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $nomUsuari = $_POST['nomUsuari'] ?? null;
+            $contrasenya = $_POST['contrasenya'] ?? null;
+
+            if ($nomUsuari && $contrasenya) {
+                $usuariMng = new UsuariManager();
+                $usuari = $usuariMng->getUserByUsername($nomUsuari);
+
+                if ($usuari) {
+                    // Verifica la contrasenya
+                    if (password_verify($contrasenya, $usuari['contrassenya'])) {
+                        // Elimina l'usuari
+                        if ($usuariMng->eliminarUsuari($nomUsuari)) {
+                            $this->data['success'] = "Usuari eliminat correctament.";
+                        } else {
+                            $this->data['error'] = "Error en eliminar l'usuari.";
+                        }
+                    } else {
+                        $this->data['error'] = "Contrasenya incorrecta.";
+                    }
+                } else {
+                    $this->data['error'] = "El nom d'usuari no existeix.";
+                }
+            } else {
+                $this->data['error'] = "Falten dades!";
+            }
+            $this->twig = 'delete_user.html';
+        } else {
+            $this->twig = 'delete_user.html';
+        }
     }
 } 
