@@ -12,6 +12,68 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
         }
     </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelector("form").addEventListener("submit", (event) => {
+                const fields = ["nomActivitat", "descripcioBreu", "descripcio", "data", "placesTotals", "placesOcupades", "preu"];
+                let valid = true;
+                let errorMessages = [];
+
+                fields.forEach(field => {
+                    const input = document.getElementById(field);
+                    if (!input.value) {
+                        input.classList.add("is-invalid");
+                        valid = false;
+                        errorMessages.push(`El camp ${field} és obligatori.`);
+                    } else {
+                        input.classList.remove("is-invalid");
+                    }
+                });
+
+                // Verificar si la data és correcta (no pot ser una data passada)
+                const dataInput = document.getElementById("data");
+                const today = new Date().toISOString().split('T')[0];
+                if (dataInput.value < today) {
+                    dataInput.classList.add("is-invalid");
+                    valid = false;
+                    errorMessages.push("La data no pot ser una data passada.");
+                } else {
+                    dataInput.classList.remove("is-invalid");
+                }
+
+                // Verificar que les places totals no siguin negatives o zero
+                const placesTotalsInput = document.getElementById("placesTotals");
+                const placesOcupadesInput = document.getElementById("placesOcupades");
+                if (placesTotalsInput.value <= 0) {
+                    placesTotalsInput.classList.add("is-invalid");
+                    valid = false;
+                    errorMessages.push("El nombre de places totals ha de ser major que zero.");
+                } else if (placesTotalsInput.value < placesOcupadesInput.value) {
+                    placesTotalsInput.classList.add("is-invalid");
+                    valid = false;
+                    errorMessages.push("El nombre de places totals no pot ser inferior al nombre de places ocupades.");
+                } else {
+                    placesTotalsInput.classList.remove("is-invalid");
+                }
+
+                // Verificar que les places ocupades no siguin negatives
+                if (placesOcupadesInput.value < 0) {
+                    placesOcupadesInput.classList.add("is-invalid");
+                    valid = false;
+                    errorMessages.push("El nombre de places ocupades no pot ser negatiu.");
+                } else {
+                    placesOcupadesInput.classList.remove("is-invalid");
+                }
+
+                if (!valid) {
+                    event.preventDefault();
+                    const errorMessagesDiv = document.getElementById("errorMessages");
+                    errorMessagesDiv.innerHTML = errorMessages.join("<br>");
+                    errorMessagesDiv.style.display = "block";
+                }
+            });
+        });
+    </script>
 </head>
 <body>
     <div class="container my-5">
@@ -23,6 +85,10 @@
         {% endif %}
         <h1 class="text-center mb-4">Editar Activitat</h1>
         {% if activitat %}
+
+        <!-- errorMessages JS -->
+        <div id="errorMessages" class="alert alert-danger mt-3 text-center" style="display: none;"></div>
+
         <form method="POST" action="/ABP-GS/activitat/editarActivitat/{{ activitat.id }}">
             <div class="mb-3">
                 <label for="nomActivitat" class="form-label">Nom de l'Activitat</label>

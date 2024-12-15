@@ -12,6 +12,9 @@
         {% if debug %}
         <div class="alert alert-secondary">{{ debug }}</div>
         {% endif %}
+
+        <div id="errorMessages" class="alert alert-danger mt-3 text-center" style="display: none;"></div>
+
         <form id="FrmLogin" action="login" method="POST" class="form-signin">
             <h1 class="h3 mb-3 fw-normal text-center">Si us plau, inicia sessió</h1>
             <div class="form-floating mb-3">
@@ -31,3 +34,30 @@
         </form>
     </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelector("#FrmLogin").addEventListener("submit", (event) => {
+            const fields = ["usuari", "contrasenya"];
+            let valid = true;
+            let errorMessages = [];
+
+            fields.forEach(field => {
+                const input = document.getElementById(field);
+                if (!input.value) {
+                    input.classList.add("is-invalid");
+                    valid = false;
+                    errorMessages.push(`El camp ${field} és obligatori.`);
+                } else {
+                    input.classList.remove("is-invalid");
+                }
+            });
+
+            if (!valid) {
+                event.preventDefault();
+                const errorMessagesDiv = document.getElementById("errorMessages");
+                errorMessagesDiv.innerHTML = errorMessages.join("<br>");
+                errorMessagesDiv.style.display = "block";
+            }
+        });
+    });
+</script>

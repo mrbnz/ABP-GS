@@ -12,17 +12,17 @@ class LoginController extends Controller
 
 		// Si hem cridat a Logout
 		if (isset($params[0]) && ($params[0] == "logout")) {
-			$this->data['debug'] = "S'ha cridat Logout";
+			//$this->data['debug'] = "S'ha cridat Logout";
 			$this->logout();
 		}
 
 		// Si estem logats ja
 		if ($this->EstaLogat()) {
-			$this->data['debug'] = "L'usuari ja està logat";
+			//$this->data['debug'] = "L'usuari ja està logat";
 			if (isset($_SESSION['username'])) {
-				$this->data['debug'] .= "<script>console.log('Ja estàs logat com a " . $_SESSION['username'] . "');</script>";
+				//$this->data['debug'] .= "<script>console.log('Ja estàs logat com a " . $_SESSION['username'] . "');</script>";
 			} else {
-				$this->data['debug'] .= "<script>console.log('No s'ha pogut determinar l'usuari logat.');</script>";
+				//$this->data['debug'] .= "<script>console.log('No s'ha pogut determinar l'usuari logat.');</script>";
 			}
 			$this->redirect("");
 		} else {
@@ -58,7 +58,7 @@ class LoginController extends Controller
 					$this->twig = "login.html";
 				}
 			} else {
-				$this->data['debug'] = "User no logat, enviem a login";
+				//$this->data['debug'] = "User no logat, enviem a login";
 				$this->twig = "login.html";
 			}
 		}
@@ -66,10 +66,10 @@ class LoginController extends Controller
 
 	public function logout()
 	{
-		$this->data['debug'] = "S'ha cridat el mètode logout";
+		//$this->data['debug'] = "S'ha cridat el mètode logout";
 		$UsuariMng = new UsuariManager();
 		$UsuariMng->tancar();
-		$this->data['debug'] = "S'ha cridat Logout";
+		//$this->data['debug'] = "S'ha cridat Logout";
 		$this->redirect("hola");
 	}
 }
