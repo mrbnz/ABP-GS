@@ -18,9 +18,12 @@ class ActivitatController extends Controller
             case isset($params[0]) && $params[0] === 'editarActivitat' && isset($params[1]) && is_numeric($params[1]):
                 $this->editarActivitat($params[1]);
                 break;
+            case isset($params[0]) && $params[0] === 'esborrarActivitat' && isset($params[1]) && is_numeric($params[1]):
+                $this->esborrarActivitat($params[1]);
+                break;    
             case isset($params[0]) && $params[0] === 'llistaActivitatsPerEditar':
                 $this->llistaActivitatsPerEditar();
-                break;
+                break;   
             case isset($params[0]) && $params[0] === 'assignarOrganitzador' && isset($params[1]) && is_numeric($params[1]):
                 $this->assignarOrganitzador($params[1]);
                 break;
@@ -242,6 +245,20 @@ class ActivitatController extends Controller
             $this->data['error'] = "Activitat no trobada.";
             $this->twig = 'activitat.html';
         }
+    }
+
+    public function esborrarActivitat($id){
+        $activitatMNG = new ActivitatManager();
+        $activitat = $activitatMNG->getActivitatById($id);
+        if($activitat){
+            $success = $activitatMNG->deleteActivitat($id);
+            if ($success) {
+                $this->data['success'] = "Activitat esborrada correctament.";
+            } else {
+                $this->data['error'] = "Error en esborrar l'activitat.";
+            }
+        }
+        $this->twig = 'editar_activitat.html';
     }
 
     public function llistaActivitatsPerEditar()
