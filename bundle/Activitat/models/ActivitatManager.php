@@ -114,6 +114,27 @@ class ActivitatManager extends Activitat {
         }
         return false;
     }
+
+    public function deleteActivitat($id)
+{
+    try {
+        $consulta = (BdD::$connection)->prepare('
+            DELETE FROM activitat
+            WHERE id = :id
+        ');
+
+        $consulta->bindValue(':id', $id, PDO::PARAM_INT);
+
+        // Ejecutar la consulta
+        return $consulta->execute();
+    } catch (PDOException $e) {
+        echo "***Error***: " . $e->getMessage();
+    }
+
+    // Retornar false en caso de fallo
+    return false;
+}
+
    
     public function addActivitatMultimedia($idActivitat, $idMultimedia)
     {

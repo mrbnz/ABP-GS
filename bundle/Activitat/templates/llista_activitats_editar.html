@@ -17,7 +17,10 @@
                             <h5 class="card-title">{{ activitat.nom }}</h5>
                             <p class="card-text">{{ activitat.descripcio_breu }}</p>
                         </div>
+                        <div>
                         <a href="/ABP-GS/activitat/editarActivitat/{{ activitat.id }}" class="btn btn-danger">Editar</a>
+                        <a href="/ABP-GS/activitat/esborrarActivitat/{{ activitat.id }}" class="btn btn-danger">Esborrar</a>
+                        </div>
                     </li>
                 {% endfor %}
             {% else %}
