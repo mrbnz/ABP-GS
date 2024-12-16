@@ -67,8 +67,6 @@ class ActivitatController extends Controller
                 return;
             }
 
-            // Afegeix aquesta línia per verificar l'ID de l'usuari
-            echo "ID de l'usuari: " . $usuariInscripcio["id"];
             
             $inscripcioMNG = new InscripcioManager();
             $inscripcio = $inscripcioMNG->getInscriptionForUser($usuariInscripcio["id"], $idActivitat);
@@ -87,7 +85,7 @@ class ActivitatController extends Controller
                 //Podriem posar més estats en cas de necessitar-los
             }
             else{
-                $inscripcioMNG-> afegirInscripcio($usuariInscripcio["id"],$idActivitat,"confirmada");
+                $inscripcioMNG-> afegirInscripcio($usuariInscripcio["id"],$idActivitat);
             }
 
             $this->mostraUnaActivitat($idActivitat);

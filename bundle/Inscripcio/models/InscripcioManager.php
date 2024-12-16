@@ -2,7 +2,7 @@
 
 class InscripcioManager
 {
-    public function afegirInscripcio($idActivitat, $idUsuari)
+    public function afegirInscripcio($idUsuari, $idActivitat)
     {
         try {
             $consulta = (BdD::$connection)->prepare('
@@ -71,13 +71,4 @@ class InscripcioManager
         return null; // Retornem null en cas d'error
     }
 }
-
-public function existeixUsuari($idUsuari)
-{
-    $consulta = (BdD::$connection)->prepare('SELECT COUNT(*) FROM usuari WHERE id = :idUsuari');
-    $consulta->bindValue(':idUsuari', $idUsuari, PDO::PARAM_INT);
-    $consulta->execute();
-    return $consulta->fetchColumn() > 0;
-}
-
 } 

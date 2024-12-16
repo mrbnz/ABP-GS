@@ -16,22 +16,5 @@ class EspaiManager extends Espai {
 			}
 		return $resposta;
 	}
-
-    public function selectAllNom() {
-		$resposta = null;
-			try {
-				$consulta = (BdD::$connection)->prepare(
-					'SELECT nom FROM `espai`'
-					);
-				$qFiles = $consulta->execute();
-				if ($qFiles > 0) {
-					$consulta->setFetchMode(PDO::FETCH_ASSOC); 
-					$resposta = $consulta->fetchAll();
-				}
-			} catch(PDOException $e) {
-				echo "***Error***: " . $e->getMessage();
-			}
-		return $resposta;
-	}
 }
 ?>
