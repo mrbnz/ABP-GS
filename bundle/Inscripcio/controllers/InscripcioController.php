@@ -18,9 +18,9 @@ class InscripcioController extends Controller
     {
         $inscripcioMNG = new InscripcioManager();
         if ($inscripcioMNG->afegirInscripcio($idActivitat, $idUsuari)) {
-            $this->data['success'] = "Usuari inscrit correctament.";
+            $this->data['success'] = "Inscripció entrada correctament.";
         } else {
-            $this->data['error'] = "Error en inscriure l'usuari.";
+            $this->data['error'] = "Error en entrar l'inscripció.";
         }
         $this->twig = 'gestionar_inscripcions.html';
     }
