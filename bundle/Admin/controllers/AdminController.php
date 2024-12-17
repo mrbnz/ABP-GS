@@ -72,25 +72,26 @@ class AdminController extends Controller
             case 'assign_activity':
                 $this->twig = 'assign_activity.html';
                 break;
-            case 'delete_user':
-                if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['userId'])) {
-                    $userId = $_POST['userId'];
-                    // Comprovar si l'usuari que s'intenta eliminar és el que està loguejat
-                    if ($userId == $_SESSION['username']) {
-                        $this->data['error'] = "No es pot eliminar l'usuari que està loguejat.";
-                    } else {
-                        if ($usuariMng->deleteUser($userId)) {
-                            $this->data['success'] = "Usuari eliminat correctament.";
-                        } else {
-                            $this->data['error'] = "Error en eliminar l'usuari.";
-                        }
-                    }
-                }
-                $this->twig = 'delete_user.html';
-                break;
             case 'config':
                 $this->twig = 'config.html';
                 break;
+            case 'delete_user':
+                if (isset($params[1])) {
+                    $usuariMNG = new UsuariManager();
+                    $usuariEsborrar = $usuariMNG->getUserById($params[1]);
+                    if($usuariEsborrar["nom_usuari"]!=$_SESSION["username"]){
+                        if($usuariMNG->deleteUser($params[1])){
+                            $this->data['success'] = "Usuari esborrat correctament.";
+                        }
+                        else{
+                            $this->data['error'] = "Error en eliminar l'usuari.";
+                        }
+                    }
+                    else{
+                        $this->data['error'] = "No es pot eliminar l'usuari que està loguejat.";
+                    }
+                    
+                }
             case 'view_users':
                 $users = $usuariMng->getAllUsers();
                 if ($users) {

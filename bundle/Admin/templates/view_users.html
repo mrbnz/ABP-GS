@@ -44,6 +44,9 @@
                             <td>{{ user.dni }}</td>
                             <td>{{ user.data_naixement }}</td>
                             <td>{{ user.administrador ? 'Sí' : 'No' }}</td>
+                            <td>
+                                <a href="/ABP-GS/admin/delete_user/{{ user.id }}" class="btn btn-danger">Eliminar</a>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
