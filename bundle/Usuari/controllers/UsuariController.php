@@ -173,37 +173,4 @@ class UsuariController extends Controller
         $this->twig = 'canviar_contrasenya.html';
     }
 
-    public function deleteUser()
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $nomUsuari = $_POST['nomUsuari'] ?? null;
-            $contrasenya = $_POST['contrasenya'] ?? null;
-
-            if ($nomUsuari && $contrasenya) {
-                $usuariMng = new UsuariManager();
-                $usuari = $usuariMng->getUserByUsername($nomUsuari);
-
-                if ($usuari) {
-                    // Verifica la contrasenya
-                    if ($usuari && password_verify($contrasenya, $usuari['contrassenya'])) {
-                        // Elimina l'usuari
-                        if ($usuariMng->eliminarUsuari($nomUsuari)) {
-                            $this->data['success'] = "Usuari eliminat correctament.";
-                        } else {
-                            $this->data['error'] = "Error en eliminar l'usuari.";
-                        }
-                    } else {
-                        $this->data['error'] = "Contrasenya incorrecta.";
-                    }
-                } else {
-                    $this->data['error'] = "El nom d'usuari no existeix.";
-                }
-            } else {
-                $this->data['error'] = "Falten dades!";
-            }
-            $this->twig = 'delete_user.html';
-        } else {
-            $this->twig = 'delete_user.html';
-        }
-    }
 } 
