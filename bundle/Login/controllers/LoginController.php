@@ -76,6 +76,6 @@ class LoginController extends Controller
 		if (isset($_COOKIE["session_username"])) {
 			setcookie("session_username", "", time() - 3600, "/", "", false, true);
 		}
-		$this->redirect("hola");
+		$this->redirect("");
 	}
 }
